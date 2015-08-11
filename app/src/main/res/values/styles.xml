@@ -1,0 +1,132 @@
+<!--
+  Copyright 2015 Nicolas Pintos
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+  -->
+
+<resources>
+
+    <!-- App theme -->
+
+    <style name="Theme" parent="Theme.AppCompat.NoActionBar" />
+
+    <style name="Theme.PopMovies.Base" parent="Theme">
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorPrimaryDark">@color/primary_dark</item>
+        <item name="colorAccent">@color/accent</item>
+        <item name="android:windowBackground">@color/background</item>
+    </style>
+
+    <style name="Theme.PopMovies" parent="Theme.PopMovies.Base" />
+
+    <!-- Movie list -->
+
+    <style name ="CardMovieListItem" parent="CardView.Dark">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:clickable">true</item>
+    </style>
+
+    <style name ="MovieListItemFooter" parent="Fill.Width">
+        <item name="android:layout_height">@dimen/movie_list_footer_height</item>
+        <item name="android:background">@color/primary</item>
+        <item name="android:layout_gravity">bottom</item>
+    </style>
+
+    <style name ="TextMovieListTitle" parent="Match">
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:paddingLeft">@dimen/spacing_large</item>
+        <item name="android:paddingRight">@dimen/spacing_large</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Subhead</item>
+    </style>
+
+
+    <style name ="ImageMovieListPoster" parent="Match">
+        <item name="android:minHeight">@dimen/movie_poster_min_height</item>
+        <item name="android:scaleType">centerCrop</item>
+        <item name="android:contentDescription">@string/movie.list.item_movie_poster</item>
+    </style>
+
+    <!-- Movie Detail -->
+
+    <style name ="ImageMovieDetailBackdrop" parent="Match">
+        <item name="android:fitsSystemWindows">true</item>
+        <item name="android:adjustViewBounds">true</item>
+        <item name="android:scaleType">centerCrop</item>
+    </style>
+
+    <style name ="ImageMovieDetailPoster" parent="Wrap">
+        <item name="android:layout_margin">@dimen/spacing_large</item>
+        <item name="android:layout_alignParentLeft">true</item>
+    </style>
+
+    <style name ="TextMovieDetailTitle" parent="Wrap">
+        <item name="android:layout_marginRight">@dimen/spacing_large</item>
+        <item name="android:layout_marginTop">@dimen/spacing_large</item>
+        <item name="android:layout_toRightOf">@id/movie_detail_image_poster</item>
+        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Headline</item>
+    </style>
+
+    <style name ="TextMovieDetailDate" parent="Wrap">
+        <item name="android:layout_below">@id/movie_detail_text_title</item>
+        <item name="android:layout_toRightOf">@id/movie_detail_image_poster</item>
+        <item name="android:singleLine">false</item>
+        <item name="android:scrollHorizontally">false</item>
+        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Subhead</item>
+    </style>
+
+    <style name ="TextMovieDetailRating" parent="Wrap">
+        <item name="android:layout_below">@id/movie_detail_text_date</item>
+        <item name="android:layout_toRightOf">@id/movie_detail_image_poster</item>
+        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Caption</item>
+    </style>
+
+    <style name ="TextMovieDetailSynopsis" parent="Fill.Width">
+        <item name="android:layout_below">@id/movie_detail_image_poster</item>
+        <item name="android:layout_marginLeft">@dimen/spacing_large</item>
+        <item name="android:layout_marginRight">@dimen/spacing_large</item>
+        <item name="android:layout_marginBottom">@dimen/movie_detail_synopsis_margin_bottom</item>
+        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Body1</item>
+    </style>
+
+
+    <!-- Generic styles -->
+
+    <style name ="Match">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+    </style>
+
+    <style name="Fill">
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">fill_parent</item>
+        <item name="android:orientation">vertical</item>
+    </style>
+
+    <style name="Wrap">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:orientation">vertical</item>
+    </style>
+
+    <style name="Fill.Height" parent="@style/Fill">
+        <item name="android:layout_width">wrap_content</item>
+        </style>
+
+    <style name="Fill.Width" parent="@style/Fill">
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+</resources>
