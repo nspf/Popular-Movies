@@ -42,5 +42,12 @@
     <item name="movie_detail_text_date" type="id"/>
     <item name="movie_detail_text_rating" type="id"/>
     <item name="movie_detail_text_synopsis" type="id"/>
+    <item name="movie_detail_trailer_container" type="id"/>
+
+    <!-- Movie Trailer -->
+    <item name="movie_trailer_image_play" type="id"/>
+    <item name="movie_trailer_text_title" type="id"/>
+
+    <!-- Movie Review -->
 
 </resources>

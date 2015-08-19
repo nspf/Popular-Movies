@@ -102,7 +102,40 @@
     </style>
 
 
+    <!-- Movie trailer -->
+
+    <style name ="MovieDetailTrailerContainer" parent="Fill.Width">
+        <item name="android:orientation">vertical</item>
+        <item name="android:layout_below">@id/movie_detail_text_synopsis</item>
+        <item name="android:layout_margin">@dimen/spacing_large</item>
+    </style>
+
+    <style name ="MovieTrailerItem" parent="Match">
+        <item name="android:layout_height">@dimen/movie_trailer_item_height</item>
+    </style>
+
+    <style name ="MovieTrailerPlayButton" parent="Wrap">
+        <item name="android:src">@drawable/ic_play_circle_outline_grey600_36dp</item>
+        <item name="android:tint">@color/accent</item>
+        <item name="android:layout_alignParentLeft">true</item>
+        <item name="android:paddingBottom">@dimen/spacing_large</item>
+        <item name="android:paddingTop">@dimen/spacing_large</item>
+        <item name="android:paddingRight">@dimen/spacing_large</item>
+
+
+    </style>
+
+    <style name ="MovieTrailerTitle" parent="Match">
+        <item name="android:layout_toRightOf">@id/movie_trailer_image_play</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:layout_centerVertical">true</item>
+        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Subhead</item>
+    </style>
+
     <!-- Generic styles -->
+
 
     <style name ="Match">
         <item name="android:layout_width">match_parent</item>

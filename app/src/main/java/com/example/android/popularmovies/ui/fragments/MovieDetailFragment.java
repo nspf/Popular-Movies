@@ -17,9 +17,11 @@
 
 package com.example.android.popularmovies.ui.fragments;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.Fragment;
@@ -27,14 +29,20 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.graphics.Palette;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.android.popularmovies.R;
+import com.example.android.popularmovies.api.MoviesService;
 import com.example.android.popularmovies.model.Movie;
+import com.example.android.popularmovies.model.MovieData;
+import com.example.android.popularmovies.model.Youtube;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
@@ -42,12 +50,15 @@ import butterknife.Bind;
 import butterknife.BindColor;
 import butterknife.BindDrawable;
 import butterknife.ButterKnife;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 public class MovieDetailFragment extends Fragment {
 
     public static final String MOVIE = "movie";
 
     private Movie mMovieDetail;
+    private View mView;
 
     @Bind(R.id.movie_detail_image_backdrop)     ImageView mMovieBackdrop;
     @Bind(R.id.movie_detail_image_poster)       ImageView mMoviePoster;
@@ -57,10 +68,10 @@ public class MovieDetailFragment extends Fragment {
     @Bind(R.id.movie_detail_text_synopsis)      TextView mMovieSynopsis;
     @Bind(R.id.movie_detail_toolbar)            Toolbar mToolbar;
     @Bind(R.id.movie_detail_collapsing_toolbar) CollapsingToolbarLayout mCollapsingToolbar;
+    @Bind(R.id.movie_detail_trailer_container)  LinearLayout mMovieTrailerContainer;
 
     @BindDrawable(R.drawable.no_poster)         Drawable mMovieErrorImg;
     @BindColor(R.color.transparent) int mColorTransparent;
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -73,9 +84,9 @@ public class MovieDetailFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_movie_detail, container, false);
-        ButterKnife.bind(this, view);
-        return view;
+        mView = inflater.inflate(R.layout.fragment_movie_detail, container, false);
+        ButterKnife.bind(this, mView);
+        return mView;
     }
 
     @Override
@@ -130,6 +141,69 @@ public class MovieDetailFragment extends Fragment {
         mMovieRating.setText(""+mMovieDetail.getVoteAverage());
         mMovieSynopsis.setText(mMovieDetail.getOverview());
 
+        Log.d("movie id", "" + mMovieDetail.getId());
+
+
+        fetchMovieData();
+
     }
+
+
+    private void fetchMovieData() {
+
+        MoviesService
+                .getMoviesApiClient()
+                .getMovieData(mMovieDetail.getId(), new retrofit.Callback<MovieData>() {
+                    @Override
+                    public void success(final MovieData movieData, Response response) {
+
+                        Log.d("trailers", "" + movieData.getTrailers().getYoutube().size());
+                        Log.d("reviews", "" + movieData.getReviews().getResults().size());
+                        Log.d("tagline", "" + movieData.getTagline());
+                        Log.d("homepage", "" + movieData.getHomepage());
+                        Log.d("video", "" + movieData.getVideo());
+
+
+
+                        //TODO: if videos.videos.size() > 0 , hasTrailers = true
+
+                        //TODO: loop for, only if reponse has trailers
+                        //If so, the backdrop image must show a play icon
+                        for (final Youtube video : movieData.getTrailers().getYoutube()) {
+
+                            //TODO: find a shorter way to to this
+                            View mMovieTrailerItem = mView.inflate(getActivity(), R.layout.movie_trailer_item, null);
+                            mMovieTrailerItem.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.youtube.com/watch?v=" + video.getSource())));
+                                }
+                            });
+
+                            TextView mMovieTrailerTitle = (TextView) mMovieTrailerItem.findViewById(R.id.movie_trailer_text_title);
+                            mMovieTrailerTitle.setText(video.getName());
+
+                            mMovieTrailerContainer.addView(mMovieTrailerItem);
+
+                        }
+
+
+                        //TODO: if hasTrailers = true, enable clicListener and show play button in backdrop
+                        /*mMovieBackdrop.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.youtube.com/watch?v=" + videos.videos.get(0).getKey())));
+                            }
+                        });*/
+                    }
+
+                    @Override
+                    public void failure(RetrofitError retrofitError) {
+                        Toast.makeText(getActivity(), retrofitError.getMessage(), Toast.LENGTH_SHORT).show();
+
+                    }
+                });
+    }
+
 
 }

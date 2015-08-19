@@ -122,9 +122,9 @@ public class MovieListFragment extends Fragment {
 
     private void fetchMovieList(String order, int page) {
         mLoading = true;
-        MoviesService.
-                getMoviesApiClient().
-                getMovieList(order, page
+        MoviesService
+                .getMoviesApiClient()
+                .getMovieList(order, page
                         , new Callback<MovieResults>() {
                     @Override
                     public void success(MovieResults movies, Response response) {

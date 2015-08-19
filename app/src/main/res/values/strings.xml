@@ -17,7 +17,7 @@
 <resources>
 
     <!-- App -->
-    <string name="app.name" translatable="false">Pop Movies</string>
+    <string name="app_name" translatable="false">Pop Movies</string>
 
     <!-- Menus -->
     <string name="menu.sort_by">Sort by</string>
@@ -32,5 +32,8 @@
     <string name="movie.detail.image_backdrop">Movie backdrop</string>
     <string name="movie.detail.image_poster">Movie poster</string>
     <string name="movie.detail.activity.title">MovieDetailActivity</string>
+
+    <!-- Movie trailer -->
+    <string name="movie.trailer_play_button">Play trailer video</string>
 
 </resources>

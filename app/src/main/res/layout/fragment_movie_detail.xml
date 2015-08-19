@@ -86,7 +86,13 @@
                 android:id="@id/movie_detail_text_synopsis"
                 style="@style/TextMovieDetailSynopsis" />
 
+            <LinearLayout
+                android:id="@id/movie_detail_trailer_container"
+                style="@style/MovieDetailTrailerContainer"/>
+
         </RelativeLayout>
+
+
 
     </android.support.v4.widget.NestedScrollView>
 

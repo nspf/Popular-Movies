@@ -16,18 +16,21 @@
 
 package com.example.android.popularmovies.api;
 
+import com.example.android.popularmovies.model.MovieData;
 import com.example.android.popularmovies.model.MovieResults;
+import com.example.android.popularmovies.model.Video;
 
 import retrofit.Callback;
 import retrofit.RequestInterceptor;
 import retrofit.RestAdapter;
 import retrofit.http.GET;
+import retrofit.http.Path;
 import retrofit.http.Query;
 
 
 public final class MoviesService {
     public static final String API_URL_BASE = "http://api.themoviedb.org/3";
-    public static final String API_KEY = "PLEASE INCLUDE YOUR API KEY";
+    public static final String API_KEY = "64f4f7bd4da8f94c04844bdc7faf18a8";
     public static final String API_KEY_PARAM = "api_key";
     private static MoviesApi sMoviesService;
 
@@ -37,6 +40,18 @@ public final class MoviesService {
                 @Query("sort_by") String param1,
                 @Query("page") int param2,
                 Callback<MovieResults> cb);
+
+
+        @GET("/movie/{id}/videos")
+        void getMovieTrailers(
+                @Path("id") int id,
+                Callback<Video.Response> cb);
+
+        @GET("/movie/{id}?append_to_response=trailers,reviews")
+        void getMovieData(
+                @Path("id") int id,
+                Callback<MovieData> cb);
+
     }
 
 
