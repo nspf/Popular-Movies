@@ -65,7 +65,7 @@ public final class MoviesService {
                             request.addQueryParam(API_KEY_PARAM, API_KEY);
                         }
                     })
-                    .setLogLevel(RestAdapter.LogLevel.FULL)
+                    //.setLogLevel(RestAdapter.LogLevel.FULL)
                     .build();
 
             sMoviesService = restAdapter.create(MoviesApi.class);
