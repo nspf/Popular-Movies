@@ -15,16 +15,9 @@
  */
 
 
-package com.example.android.popularmovies.model;
+package com.example.android.popularmovies.data.model;
 
-import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.SerializedName;
-
-import java.util.ArrayList;
-import java.util.List;
-
-
-public class MovieResults {
+/*public class MovieResults {
 
     @Expose
     private Integer page;
@@ -69,4 +62,65 @@ public class MovieResults {
         this.totalResults = totalResults;
     }
 
+}*/
+
+/*
+@Table
+public class MovieResults {
+
+
+    @Expose
+    @Column(value = Column.FieldType.INTEGER,  primaryKey = true)
+    public Integer page;
+
+    @SerializedName("total_pages")
+    @Column(Column.FieldType.INTEGER)
+    @Expose
+    public Integer totalPages;
+
+    @SerializedName("total_results")
+    @Column(Column.FieldType.INTEGER)
+    @Expose
+    public Integer totalResults;
+
+
+    public List<Movie> results;
+
+    public MovieResults() {
+        super();    // required by ActiveAndroid
+    }
+
+    public Integer getPage() {
+        return page;
+    }
+
+    public void setPage(Integer page) {
+        this.page = page;
+    }
+
+    public List<Movie> getResults() {
+        return results;
+    }
+
+    public void setMovies(ArrayList<Movie> results) {
+        this.results = results;
+    }
+
+    public Integer getTotalPages() {
+        return totalPages;
+    }
+
+    public void setTotalPages(Integer totalPages) {
+        this.totalPages = totalPages;
+    }
+
+    public Integer getTotalResults() {
+        return totalResults;
+    }
+
+    public void setTotalResults(Integer totalResults) {
+        this.totalResults = totalResults;
+    }
+
 }
+*/

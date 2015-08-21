@@ -18,6 +18,8 @@
 
     <!-- App -->
     <string name="app_name" translatable="false">Pop Movies</string>
+    <string name="authority" translatable="false">com.example.android.popularmovies</string>
+
 
     <!-- Menus -->
     <string name="menu.sort_by">Sort by</string>

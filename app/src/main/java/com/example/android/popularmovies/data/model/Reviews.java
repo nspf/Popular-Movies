@@ -1,5 +1,5 @@
 
-package com.example.android.popularmovies.model;
+package com.example.android.popularmovies.data.model;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;

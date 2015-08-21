@@ -1,11 +1,8 @@
 apply plugin: 'com.android.application'
 
-buildscript {
-    repositories {
-        mavenCentral()
-    }
-
-
+repositories {
+    mavenCentral()
+    maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
 }
 
 android {
@@ -27,7 +24,6 @@ android {
     }
 }
 
-
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
 
@@ -42,5 +38,12 @@ dependencies {
     compile 'com.squareup.retrofit:retrofit:1.9.0'
 
     compile 'com.jakewharton:butterknife:7.0.1'
+
+    //compile 'com.michaelpardo:activeandroid:3.1.0-SNAPSHOT'
+
+    //compile 'com.github.triplet.simpleprovider:simpleprovider:1.1.0'
+
+    compile 'com.michaelpardo:ollie:0.3.1'
+    provided 'com.michaelpardo:ollie-compiler:0.3.1'
 
 }

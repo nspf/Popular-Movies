@@ -39,10 +39,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.android.popularmovies.R;
-import com.example.android.popularmovies.api.MoviesService;
-import com.example.android.popularmovies.model.Movie;
-import com.example.android.popularmovies.model.MovieData;
-import com.example.android.popularmovies.model.Youtube;
+import com.example.android.popularmovies.data.api.MoviesService;
+import com.example.android.popularmovies.data.model.Movie;
+import com.example.android.popularmovies.data.model.MovieData;
+import com.example.android.popularmovies.data.model.Youtube;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
@@ -141,7 +141,7 @@ public class MovieDetailFragment extends Fragment {
         mMovieRating.setText(""+mMovieDetail.getVoteAverage());
         mMovieSynopsis.setText(mMovieDetail.getOverview());
 
-        Log.d("movie id", "" + mMovieDetail.getId());
+        Log.d("movie id", "" + mMovieDetail.getMovieId());
 
 
         fetchMovieData();
@@ -153,7 +153,7 @@ public class MovieDetailFragment extends Fragment {
 
         MoviesService
                 .getMoviesApiClient()
-                .getMovieData(mMovieDetail.getId(), new retrofit.Callback<MovieData>() {
+                .getMovieData(mMovieDetail.getMovieId(), new retrofit.Callback<MovieData>() {
                     @Override
                     public void success(final MovieData movieData, Response response) {
 

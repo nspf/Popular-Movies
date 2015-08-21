@@ -14,15 +14,21 @@
  * limitations under the License.
  */
 
-package com.example.android.popularmovies.api;
+package com.example.android.popularmovies.data.api;
 
-import com.example.android.popularmovies.model.MovieData;
-import com.example.android.popularmovies.model.MovieResults;
-import com.example.android.popularmovies.model.Video;
+import com.example.android.popularmovies.data.model.Movie;
+import com.example.android.popularmovies.data.model.MovieData;
+import com.example.android.popularmovies.data.model.Video;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
+
+import java.lang.reflect.Type;
+import java.util.List;
 
 import retrofit.Callback;
 import retrofit.RequestInterceptor;
 import retrofit.RestAdapter;
+import retrofit.converter.GsonConverter;
 import retrofit.http.GET;
 import retrofit.http.Path;
 import retrofit.http.Query;
@@ -39,23 +45,27 @@ public final class MoviesService {
         void getMovieList(
                 @Query("sort_by") String param1,
                 @Query("page") int param2,
-                Callback<MovieResults> cb);
+                //Callback<MovieResults> cb);
+                Callback<List<Movie>> cb);
 
 
-        @GET("/movie/{id}/videos")
+
+                @GET("/movie/{id}/videos")
         void getMovieTrailers(
                 @Path("id") int id,
                 Callback<Video.Response> cb);
 
         @GET("/movie/{id}?append_to_response=trailers,reviews")
         void getMovieData(
-                @Path("id") int id,
+                @Path("id") long id,
                 Callback<MovieData> cb);
 
     }
 
 
     public static MoviesApi getMoviesApiClient() {
+        Type listType = new TypeToken<List<Movie>>() {
+        }.getType();
         if (sMoviesService == null) {
             RestAdapter restAdapter = new RestAdapter.Builder()
                     .setEndpoint(API_URL_BASE)
@@ -65,7 +75,9 @@ public final class MoviesService {
                             request.addQueryParam(API_KEY_PARAM, API_KEY);
                         }
                     })
-                    //.setLogLevel(RestAdapter.LogLevel.FULL)
+                    .setConverter(new GsonConverter(new GsonBuilder().registerTypeAdapter(
+                            listType, new MovieListDeserializer()).create()))
+                    .setLogLevel(RestAdapter.LogLevel.FULL)
                     .build();
 
             sMoviesService = restAdapter.create(MoviesApi.class);

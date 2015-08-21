@@ -8,7 +8,9 @@
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/Theme.PopMovies">
+        android:theme="@style/Theme.PopMovies"
+        android:name=".PopMoviesApplication">
+
         <activity
             android:name=".ui.activities.MovieListActivity"
             android:launchMode="singleTop" >
@@ -28,6 +30,11 @@
                 android:value=".ui.activities.MovieListActivity" />
 
             </activity>
+
+        <provider
+            android:authorities="@string/authority"
+            android:name=".data.provider.MoviesProvider"
+            android:exported="false"/>
 
     </application>
 

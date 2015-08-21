@@ -18,6 +18,7 @@ package com.example.android.popularmovies.ui.adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.support.v7.graphics.Palette;
@@ -29,7 +30,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.android.popularmovies.R;
-import com.example.android.popularmovies.model.Movie;
+import com.example.android.popularmovies.data.model.Movie;
 import com.example.android.popularmovies.ui.activities.MovieDetailActivity;
 import com.example.android.popularmovies.ui.fragments.MovieDetailFragment;
 import com.squareup.picasso.Callback;
@@ -45,6 +46,7 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.Movi
 
     private final Context mContext;
     private final List<Movie> mMovieList;
+    private Cursor mCursor;
 
     public MovieListAdapter(Context context, List<Movie> movieList) {
         this.mContext = context;
@@ -56,9 +58,15 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.Movi
         return position;
     }
 
-    @Override
+    /*@Override
     public int getItemCount() {
         return mMovieList.size();
+    }*/
+
+    @Override
+    public int getItemCount() {
+        if ( null == mCursor ) return 0;
+        return mCursor.getCount();
     }
 
     @Override
@@ -71,13 +79,17 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.Movi
     @Override
     public void onBindViewHolder(final MovieHolder holder, final int position) {
 
-        final Movie movie = mMovieList.get(position);
+        // CURSOR !!!!
+        mCursor.moveToPosition(position);
+
+        //final Movie movie = mMovieList.get(position);
 
         holder.mMovieFooter.setBackgroundColor(holder.mColorTransparent);
         holder.mMovieTitle.setTextColor(holder.mColorWhite);
 
         Picasso.with(mContext)
-                .load(movie.getFullPosterPath())
+                //.load(movie.getFullPosterPath())
+                .load("http://image.tmdb.org/t/p/w185"+mCursor.getString(mCursor.getColumnIndex("poster_path")))
                 .error(R.drawable.no_poster)
                 .into(holder.mMoviePoster, new Callback() {
 
@@ -112,8 +124,9 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.Movi
                     }
                 });
 
-        if(movie.getTitle() != null) {
-            holder.mMovieTitle.setText(movie.getTitle());
+        if(mCursor.getString(mCursor.getColumnIndex("title")) != null) {
+            //holder.mMovieTitle.setText(movie.getTitle());
+            holder.mMovieTitle.setText(mCursor.getString(mCursor.getColumnIndex("title")));
         }
     }
 
@@ -133,6 +146,7 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.Movi
             vi.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+
                     Intent intent = new Intent(v.getContext(), MovieDetailActivity.class);
                     intent.putExtra(MovieDetailFragment.MOVIE, mMovieList.get(getAdapterPosition()));
                     mContext.startActivity(intent);
@@ -145,6 +159,21 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.Movi
     public void add(List<Movie> movieList) {
         mMovieList.addAll(movieList);
         notifyDataSetChanged();
+    }
+
+    public void clear() {
+        mMovieList.clear();
+        this.notifyDataSetChanged();
+    }
+
+    //CURSOR
+    public void swapCursor(Cursor newCursor) {
+        mCursor = newCursor;
+        notifyDataSetChanged();
+    }
+
+    public Cursor getCursor() {
+        return mCursor;
     }
 
 }
