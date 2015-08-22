@@ -1,8 +1,8 @@
 package com.example.android.popularmovies.data.provider;
 
-import ollie.OllieProvider;
+import com.activeandroid.content.ContentProvider;
 
-public class MoviesProvider extends OllieProvider {
+public class MoviesProvider extends ContentProvider {
 
     protected String getAuthority() {
         return "com.example.android.popularmovies";

@@ -77,7 +77,7 @@ public final class MoviesService {
                     })
                     .setConverter(new GsonConverter(new GsonBuilder().registerTypeAdapter(
                             listType, new MovieListDeserializer()).create()))
-                    .setLogLevel(RestAdapter.LogLevel.FULL)
+                    //.setLogLevel(RestAdapter.LogLevel.FULL)
                     .build();
 
             sMoviesService = restAdapter.create(MoviesApi.class);

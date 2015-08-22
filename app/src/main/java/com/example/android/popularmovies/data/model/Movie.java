@@ -19,89 +19,89 @@ package com.example.android.popularmovies.data.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
 
+import com.activeandroid.Model;
+import com.activeandroid.annotation.Column;
+import com.activeandroid.annotation.Table;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import ollie.Model;
-import ollie.annotation.Column;
-import ollie.annotation.Table;
 
-@Table("movies")
+@Table(name = "movies")
 public class Movie extends Model implements Parcelable{
 
     /*
      * @Expose - expose the field to Gson
      * @SerializedName("") - name used by Gson
-     * @Column( ) - column name used by simpleprovider
+     * @Column("") - column name used by ActiveAndroid
      */
 
-    @SerializedName("movie_id")
     @Expose
-    @Column("movie_id")
-    public Long id;
+    @Column(name = "movie_id", unique = true, onUniqueConflict = Column.ConflictAction.IGNORE)
+    public Integer id;
 
     @Expose
-    @Column("adult")
+    @Column(name = "adult")
     public Boolean adult;
 
 
     @SerializedName("backdrop_path")
     @Expose
-    @Column("backdrop_path")
+    @Column(name = "backdrop_path")
     public String backdropPath;
 
     @SerializedName("original_language")
-    @Column("original_language")
+    @Column(name = "original_language")
     @Expose
     public String originalLanguage;
 
 
     @SerializedName("original_title")
-    @Column("original_title")
+    @Column(name = "original_title")
     @Expose
     public String originalTitle;
 
 
-    @Column("overview")
+    @Column(name = "overview")
     @Expose
     public String overview;
 
 
     @SerializedName("release_date")
-    @Column("release_date")
+    @Column(name = "release_date")
     @Expose
     public String releaseDate;
 
 
     @SerializedName("poster_path")
-    @Column("poster_path")
+    @Column(name = "poster_path")
     @Expose
     public String posterPath;
 
 
-    @Column("popularity")
+    @Column(name = "popularity")
     @Expose
     public Double popularity;
 
-    @Column("title")
+    @Column(name = "title")
     @Expose
     public String title;
 
 
-    @Column("video")
+    @Column(name = "video")
     @Expose
     public Boolean video;
 
 
     @SerializedName("vote_average")
-    @Column("vote_average")
+    @Column(name = "vote_average")
     @Expose
     public Double voteAverage;
 
 
     @SerializedName("vote_count")
-    @Column("vote_count")
+    @Column(name = "vote_count")
     @Expose
     public Integer voteCount;
 
@@ -118,7 +118,7 @@ public class Movie extends Model implements Parcelable{
         adult = in.readByte() !=0;
         backdropPath = in.readString();
         //genreIds = (ArrayList<Integer>) in.readSerializable();
-        id = in.readLong();
+        id = in.readInt();
         originalLanguage = in.readString();
         overview = in.readString();
         releaseDate = in.readString();
@@ -139,6 +139,7 @@ public class Movie extends Model implements Parcelable{
     public void writeToParcel(Parcel out, int flags) {
         out.writeByte((byte) (getAdult() ? 1 : 0));
         out.writeString(getBackdropPath());
+        Log.d("getid", getMovieId() + "");
         out.writeLong(getMovieId());
         out.writeString(getOriginalLanguage());
         out.writeString(getOverview());
@@ -187,11 +188,11 @@ public class Movie extends Model implements Parcelable{
         this.genreIds = genreIds;
     }*/
 
-    public Long getMovieId() {
+    public Integer getMovieId() {
         return id;
     }
 
-    public void setMovieId(Long id) {
+    public void setMovieId(Integer id) {
         this.id = id;
     }
 

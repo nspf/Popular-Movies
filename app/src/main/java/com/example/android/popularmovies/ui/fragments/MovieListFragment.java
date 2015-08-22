@@ -154,9 +154,8 @@ public class MovieListFragment extends Fragment {
                         , new Callback<List<Movie>>() {
                     @Override
                     public void success(List<Movie> movies, Response response) {
-                        mMovieListAdapter.add(movies);
-                        mLoading = false;
-                        mMovieListPage++;
+                        //mMovieListAdapter.add(movies);
+
 
                         Uri uri = Uri.parse("content://" + getString(R.string.authority) + "/movies");
                         Vector<ContentValues> cVVector = new Vector<ContentValues>(movies.size());
@@ -166,7 +165,7 @@ public class MovieListFragment extends Fragment {
                             for (Movie movie : movies){
 
                                 ContentValues values = new ContentValues();
-
+                                values.put("movie_id", movie.getMovieId());
                                 values.put("adult", movie.getAdult());
                                 values.put("backdrop_path", movie.getFullBackdropPath());
                                 values.put("original_language", movie.getOriginalLanguage());
@@ -181,6 +180,14 @@ public class MovieListFragment extends Fragment {
                                 values.put("vote_count", movie.getVoteCount());
 
                                 cVVector.add(values);
+
+                                /*Parcel parcel = Parcel.obtain();
+                                movie.writeToParcel(parcel, 0);
+                                parcel.setDataPosition(0);
+                                ContentValues values = ContentValues.CREATOR.createFromParcel(parcel);
+                                parcel.recycle();
+
+                                cVVector.add(values);*/
 
                             }
 
@@ -198,24 +205,13 @@ public class MovieListFragment extends Fragment {
                                 getActivity().getContentResolver().bulkInsert(uri, movie);
 
                             }*/
+                            /*new Select().from(Movie.class).offset(mMovieListPage - 1)
+                                    .orderBy("id DESC").limit(20).execute();*/
+
+                            mLoading = false;
+                            mMovieListPage++;
+
                         }
-
-
-
-
-
-
-
-
-
-                        //Add to database
-
-                        /*for (Movie movie : movies.getResults()) {
-                            movie.save();
-
-
-
-                        }*/
 
 
                     }
@@ -255,30 +251,22 @@ public class MovieListFragment extends Fragment {
 
         @Override
         public void onLoadFinished(Loader<Cursor> arg0, Cursor cursor) {
-            //((mMovieListAdapter)mySpinner.getAdapter()).swapCursor(cursor);
+            Log.d("onloadfinished","true");
+            Log.d("cursor count",cursor.getCount()+"");
+            Log.d("cursor position",cursor.getPosition()+"");
             mMovieListAdapter.swapCursor(cursor);
 
+
         }
 
         @Override
-        public void onLoaderReset(Loader<Cursor> arg0) {
+        public void onLoaderReset(Loader<Cursor> loader) {
+            Log.d("onloadreset","true");
+
             //((SimpleCursorAdapter)mySpinner.getAdapter()).swapCursor(null);
+            mMovieListAdapter.swapCursor(null);
+
         }
-
-        /*@Override
-        public void onLoadFinished(Loader<List<Movie>> loader, List<Movie> data) {
-
-            Log.i("DEBUG", "Fetched " + data.size());
-            //mMovieListAdapter.clear();
-            mMovieListAdapter.add(data);
-            //mMovieListAdapter.notifyDataSetChanged();
-        }
-
-        @Override
-        public void onLoaderReset(Loader<List<Movie>> arg0) {
-            mMovieListAdapter.clear();
-            mMovieListAdapter.notifyDataSetChanged();
-        }*/
 
     }
 

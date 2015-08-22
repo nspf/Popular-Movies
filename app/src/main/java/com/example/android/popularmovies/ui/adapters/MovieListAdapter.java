@@ -89,7 +89,7 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.Movi
 
         Picasso.with(mContext)
                 //.load(movie.getFullPosterPath())
-                .load("http://image.tmdb.org/t/p/w185"+mCursor.getString(mCursor.getColumnIndex("poster_path")))
+                .load(mCursor.getString(mCursor.getColumnIndex("poster_path")))
                 .error(R.drawable.no_poster)
                 .into(holder.mMoviePoster, new Callback() {
 
@@ -148,7 +148,7 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.Movi
                 public void onClick(View v) {
 
                     Intent intent = new Intent(v.getContext(), MovieDetailActivity.class);
-                    intent.putExtra(MovieDetailFragment.MOVIE, mMovieList.get(getAdapterPosition()));
+                    intent.putExtra(MovieDetailFragment.MOVIE, mCursor.getPosition());
                     mContext.startActivity(intent);
                 }
             });
@@ -156,10 +156,10 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.Movi
         }
     }
 
-    public void add(List<Movie> movieList) {
+    /*public void add(List<Movie> movieList) {
         mMovieList.addAll(movieList);
         notifyDataSetChanged();
-    }
+    }*/
 
     public void clear() {
         mMovieList.clear();
@@ -169,7 +169,7 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.Movi
     //CURSOR
     public void swapCursor(Cursor newCursor) {
         mCursor = newCursor;
-        notifyDataSetChanged();
+        this.notifyDataSetChanged();
     }
 
     public Cursor getCursor() {
