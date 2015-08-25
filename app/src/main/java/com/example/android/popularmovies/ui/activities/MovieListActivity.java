@@ -79,12 +79,21 @@ public class MovieListActivity extends AppCompatActivity implements MovieDetailF
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
-        if(getMovieListOrder().equals(MOST_POPULAR)) {
-            menu.findItem(R.id.menu_most_popular).setChecked(true);
+
+        switch(getMovieListOrder()){
+
+            case MOST_POPULAR:
+                menu.findItem(R.id.menu_most_popular).setChecked(true);
+                break;
+            case HIGHEST_RATED:
+                menu.findItem(R.id.menu_highest_rated).setChecked(true);
+                break;
+            case FAVORITES:
+                menu.findItem(R.id.menu_favorites).setChecked(true);
+                break;
+
         }
-        else {
-            menu.findItem(R.id.menu_highest_rated).setChecked(true);
-        }
+
         return true;
     }
 
@@ -92,6 +101,7 @@ public class MovieListActivity extends AppCompatActivity implements MovieDetailF
     public boolean onOptionsItemSelected(MenuItem item) {
 
         switch(item.getItemId()){
+
             case R.id.menu_most_popular:
                 item.setChecked(!item.isChecked());
                 setMovieListOrder(MOST_POPULAR);
@@ -108,6 +118,7 @@ public class MovieListActivity extends AppCompatActivity implements MovieDetailF
                 return  true;
 
         }
+
         return super.onOptionsItemSelected(item);
     }
 
