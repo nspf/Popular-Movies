@@ -18,11 +18,11 @@ package com.example.android.popularmovies.ui.adapters;
 
 import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.support.v7.graphics.Palette;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,7 +46,6 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.Movi
 
     private final Context mContext;
     private final List<Movie> mMovieList;
-    private Cursor mCursor;
 
     public MovieListAdapter(Context context, List<Movie> movieList) {
         this.mContext = context;
@@ -58,38 +57,28 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.Movi
         return position;
     }
 
-    /*@Override
-    public int getItemCount() {
-        return mMovieList.size();
-    }*/
-
     @Override
     public int getItemCount() {
-        if ( null == mCursor ) return 0;
-        return mCursor.getCount();
+        return mMovieList.size();
     }
 
     @Override
     public MovieHolder onCreateViewHolder(ViewGroup parent, final int position) {
-            View view = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.movie_list_item, parent, false);
-            return new MovieHolder(view);
+        View view = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.movie_list_item, parent, false);
+        return new MovieHolder(view);
     }
 
     @Override
     public void onBindViewHolder(final MovieHolder holder, final int position) {
 
-        // CURSOR !!!!
-        mCursor.moveToPosition(position);
-
-        //final Movie movie = mMovieList.get(position);
+        final Movie movie = mMovieList.get(position);
 
         holder.mMovieFooter.setBackgroundColor(holder.mColorTransparent);
         holder.mMovieTitle.setTextColor(holder.mColorWhite);
 
         Picasso.with(mContext)
-                //.load(movie.getFullPosterPath())
-                .load(mCursor.getString(mCursor.getColumnIndex("poster_path")))
+                .load(movie.getFullPosterPath())
                 .error(R.drawable.no_poster)
                 .into(holder.mMoviePoster, new Callback() {
 
@@ -124,9 +113,8 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.Movi
                     }
                 });
 
-        if(mCursor.getString(mCursor.getColumnIndex("title")) != null) {
-            //holder.mMovieTitle.setText(movie.getTitle());
-            holder.mMovieTitle.setText(mCursor.getString(mCursor.getColumnIndex("title")));
+        if(movie.getTitle() != null) {
+            holder.mMovieTitle.setText(movie.getTitle());
         }
     }
 
@@ -146,9 +134,9 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.Movi
             vi.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
+                    Log.i("movie a enviar",mMovieList.get(getAdapterPosition()).getTitle());
                     Intent intent = new Intent(v.getContext(), MovieDetailActivity.class);
-                    intent.putExtra(MovieDetailFragment.MOVIE, mCursor.getPosition());
+                    intent.putExtra(MovieDetailFragment.MOVIE, mMovieList.get(getAdapterPosition()));
                     mContext.startActivity(intent);
                 }
             });
@@ -156,24 +144,9 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.Movi
         }
     }
 
-    /*public void add(List<Movie> movieList) {
+    public void add(List<Movie> movieList) {
         mMovieList.addAll(movieList);
         notifyDataSetChanged();
-    }*/
-
-    public void clear() {
-        mMovieList.clear();
-        this.notifyDataSetChanged();
-    }
-
-    //CURSOR
-    public void swapCursor(Cursor newCursor) {
-        mCursor = newCursor;
-        this.notifyDataSetChanged();
-    }
-
-    public Cursor getCursor() {
-        return mCursor;
     }
 
 }

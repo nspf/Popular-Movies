@@ -41,6 +41,8 @@ public class MovieDetailActivity extends AppCompatActivity {
             Bundle arguments = new Bundle();
             arguments.putParcelable(MovieDetailFragment.MOVIE,
                     getIntent().getParcelableExtra(MovieDetailFragment.MOVIE));
+            /*arguments.putInt("id",
+                    getIntent().getIntExtra("id",0));*/
 
             MovieDetailFragment fragment = new MovieDetailFragment();
             fragment.setArguments(arguments);

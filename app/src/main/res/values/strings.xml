@@ -25,6 +25,7 @@
     <string name="menu.sort_by">Sort by</string>
     <string name="menu.most_popular">Most popular</string>
     <string name="menu.highest_rated">Highest rated</string>
+    <string name="menu.favorites">Favorites</string>
     <string name="menu.action_settings">Settings</string>
 
     <!-- Movie list -->

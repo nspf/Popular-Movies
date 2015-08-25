@@ -41,6 +41,8 @@
 
     <dimen name="movie_trailer_item_height">48dp</dimen>
 
+    <dimen name="fab_margin">16dp</dimen>
+
 
 
 

@@ -21,21 +21,26 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import com.example.android.popularmovies.R;
+import com.example.android.popularmovies.data.model.Movie;
+import com.example.android.popularmovies.ui.fragments.FavoriteMoviesFragment;
+import com.example.android.popularmovies.ui.fragments.MovieDetailFragment;
 import com.example.android.popularmovies.ui.fragments.MovieListFragment;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
 
-public class MovieListActivity extends AppCompatActivity {
+public class MovieListActivity extends AppCompatActivity implements MovieDetailFragment.mCallback {
 
     private final String SORT_BY = "sort_by";
     private final String MOST_POPULAR = "popularity.desc";
     private final String HIGHEST_RATED = "vote_average.desc";
+    private final String FAVORITES = "favorites";
     private final String MOVIE_LIST_FRAGMENT_TAG = "movieListFragment";
 
     private MovieListFragment mMovieListFragment;
@@ -97,6 +102,11 @@ public class MovieListActivity extends AppCompatActivity {
                 setMovieListOrder(HIGHEST_RATED);
                 return  true;
 
+            case R.id.menu_favorites:
+                item.setChecked(!item.isChecked());
+                setMovieListOrder(FAVORITES);
+                return  true;
+
         }
         return super.onOptionsItemSelected(item);
     }
@@ -124,16 +134,36 @@ public class MovieListActivity extends AppCompatActivity {
     // Create the movie list fragment and add it to the activity
     public void loadNewMovieListFragment() {
 
-        Bundle arguments = new Bundle();
-        arguments.putString(MovieListFragment.SORT_BY,getMovieListOrder());
+        if(getMovieListOrder().equals(FAVORITES)) {
 
-        mMovieListFragment = new MovieListFragment();
-        mMovieListFragment.setArguments(arguments);
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.movie_list_fragment_container,new FavoriteMoviesFragment(), MOVIE_LIST_FRAGMENT_TAG)
+                    .commit();
 
-        getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.movie_list_fragment_container, mMovieListFragment, MOVIE_LIST_FRAGMENT_TAG)
-                .commit();
+        }
+
+        else {
+
+            Bundle arguments = new Bundle();
+            arguments.putString(MovieListFragment.SORT_BY,getMovieListOrder());
+
+            mMovieListFragment = new MovieListFragment();
+            mMovieListFragment.setArguments(arguments);
+
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.movie_list_fragment_container, mMovieListFragment, MOVIE_LIST_FRAGMENT_TAG)
+                    .commit();
+
+        }
+
+
+    }
+
+    @Override
+    public void onFavoritedMovie(Movie movie) {
+        Log.d("wiii", "se envio el callback");
     }
 
 }

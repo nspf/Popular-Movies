@@ -17,6 +17,7 @@
 
 package com.example.android.popularmovies.ui.fragments;
 
+import android.content.ContentUris;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
@@ -24,6 +25,7 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -43,22 +45,31 @@ import com.example.android.popularmovies.data.api.MoviesService;
 import com.example.android.popularmovies.data.model.Movie;
 import com.example.android.popularmovies.data.model.MovieData;
 import com.example.android.popularmovies.data.model.Youtube;
+import com.example.android.popularmovies.data.provider.movie.MovieColumns;
+import com.example.android.popularmovies.data.provider.movie.MovieContentValues;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
+
+import org.chalup.microorm.MicroOrm;
 
 import butterknife.Bind;
 import butterknife.BindColor;
 import butterknife.BindDrawable;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
-public class MovieDetailFragment extends Fragment {
+public class MovieDetailFragment extends Fragment /*implements LoaderManager.LoaderCallbacks<Cursor> */{
 
     public static final String MOVIE = "movie";
+    private static final int DETAIL_LOADER = 1;
 
     private Movie mMovieDetail;
     private View mView;
+    private Uri mUri;
+    private int mPosition;
+    MicroOrm mOrm;
 
     @Bind(R.id.movie_detail_image_backdrop)     ImageView mMovieBackdrop;
     @Bind(R.id.movie_detail_image_poster)       ImageView mMoviePoster;
@@ -69,6 +80,8 @@ public class MovieDetailFragment extends Fragment {
     @Bind(R.id.movie_detail_toolbar)            Toolbar mToolbar;
     @Bind(R.id.movie_detail_collapsing_toolbar) CollapsingToolbarLayout mCollapsingToolbar;
     @Bind(R.id.movie_detail_trailer_container)  LinearLayout mMovieTrailerContainer;
+    @Bind(R.id.movie_detail_favorite_button) FloatingActionButton mFavoritebutton;
+
 
     @BindDrawable(R.drawable.no_poster)         Drawable mMovieErrorImg;
     @BindColor(R.color.transparent) int mColorTransparent;
@@ -77,7 +90,12 @@ public class MovieDetailFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
+
+            //Bundle bundle = this.getArguments();
+            //mUri = bundle.getParcelable(MOVIE);
             mMovieDetail = getArguments().getParcelable(MOVIE);
+            Log.d("detail",mMovieDetail.toString());
+            ///mPosition = bundle.getInt("id");
         }
     }
 
@@ -93,6 +111,8 @@ public class MovieDetailFragment extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        //////getLoaderManager().initLoader(DETAIL_LOADER, null, this);
+
         ((AppCompatActivity)getActivity()).setSupportActionBar(mToolbar);
 
         ActionBar mActionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
@@ -101,6 +121,8 @@ public class MovieDetailFragment extends Fragment {
         }
 
         mCollapsingToolbar.setTitle(mMovieDetail.getTitle());
+
+
         mCollapsingToolbar.setExpandedTitleColor(mColorTransparent);
 
         Picasso.with(getActivity())
@@ -138,31 +160,45 @@ public class MovieDetailFragment extends Fragment {
 
         mMovieTitle.setText(mMovieDetail.getTitle());
         mMovieDate.setText(mMovieDetail.getYearFromReleaseDate());
-        mMovieRating.setText(""+mMovieDetail.getVoteAverage());
+        mMovieRating.setText("" + mMovieDetail.getVoteAverage());
         mMovieSynopsis.setText(mMovieDetail.getOverview());
 
-        Log.d("movie id", "" + mMovieDetail.getMovieId());
+        Log.i("movie id", "" + mMovieDetail.getMovieId());
+
+        if(mMovieDetail.isFavorite()) {
+            mFavoritebutton.setPressed(true);
+        }
+        else {
+            mFavoritebutton.setPressed(false);
+        }
+
+        mFavoritebutton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //Movie movie = Movie.select(mMovieDetail.getMovieId());
+                        setFavorite(mMovieDetail, true);
+            }
+        });
 
 
-        fetchMovieData();
+        //fetchMovieData();
 
     }
 
 
-    private void fetchMovieData() {
+    private void fetchMovieData(Long movie_id) {
 
         MoviesService
                 .getMoviesApiClient()
-                .getMovieData(mMovieDetail.getMovieId(), new retrofit.Callback<MovieData>() {
+                .getMovieData(movie_id, new retrofit.Callback<MovieData>() {
                     @Override
                     public void success(final MovieData movieData, Response response) {
 
-                        Log.d("trailers", "" + movieData.getTrailers().getYoutube().size());
+                        /*Log.d("trailers", "" + movieData.getTrailers().getYoutube().size());
                         Log.d("reviews", "" + movieData.getReviews().getResults().size());
                         Log.d("tagline", "" + movieData.getTagline());
                         Log.d("homepage", "" + movieData.getHomepage());
-                        Log.d("video", "" + movieData.getVideo());
-
+                        Log.d("video", "" + movieData.getVideo());*/
 
 
                         //TODO: if videos.videos.size() > 0 , hasTrailers = true
@@ -204,6 +240,164 @@ public class MovieDetailFragment extends Fragment {
                     }
                 });
     }
+
+
+    /*@Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args){
+        String selection = null;
+        String [] selectionArgs = null;
+        if (args != null){
+            selection = "id";
+            selectionArgs = new String[]{String.valueOf(mPosition)};
+        }
+        return new CursorLoader(getActivity(),
+                mUri,
+                null,
+                selection,
+                selectionArgs,
+                null);
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
+
+        if (cursor != null) {
+
+            final Cursor data = cursor;
+            data.moveToPosition(mPosition);
+
+            mCollapsingToolbar.setTitle(data.getString(data.getColumnIndex("title")));
+            mCollapsingToolbar.setExpandedTitleColor(mColorTransparent);
+
+            Picasso.with(getActivity())
+                    .load(data.getString(data.getColumnIndex("backdrop_path")))
+                    .error(mMovieErrorImg)
+                    .into(mMovieBackdrop, new Callback() {
+
+                        @Override
+                        public void onSuccess() {
+
+                            Bitmap bitmap = ((BitmapDrawable) mMovieBackdrop.getDrawable()).getBitmap();
+                            new Palette.Builder(bitmap).generate(new Palette.PaletteAsyncListener() {
+
+                                @Override
+                                public void onGenerated(Palette palette) {
+
+                                    Palette.Swatch vibrant = palette.getVibrantSwatch();
+                                    if (vibrant != null) {
+                                        mCollapsingToolbar.setContentScrimColor(vibrant.getRgb());
+                                    }
+                                }
+                            });
+                        }
+
+                        @Override
+                        public void onError() {
+
+                        }
+                    });
+
+            Picasso.with(getActivity())
+                    .load(data.getString(data.getColumnIndex("poster_path")))
+                    .error(mMovieErrorImg)
+                    .into(mMoviePoster);
+
+            mMovieTitle.setText(data.getString(data.getColumnIndex("title")));
+            mMovieDate.setText(data.getString(data.getColumnIndex("release_date")));
+            mMovieRating.setText(data.getString(data.getColumnIndex("vote_average")));
+            mMovieSynopsis.setText(data.getString(data.getColumnIndex("overview")));
+
+            mFavoritebutton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    setFavorite(Movie.select(data.getInt(data.getColumnIndex("movie_id"))),true);
+                }
+            });
+
+            fetchMovieData(data.getLong(data.getColumnIndex("movie_id")));
+
+
+        }
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+
+    }*/
+
+    public void setFavorite(Movie movie, Boolean favorite) {
+        if(movie.isFavorite()) {
+            movie.setFavorite(false);
+
+            Toast.makeText(getActivity(),"REMOVED "+movie.getTitle(),Toast.LENGTH_LONG).show();
+            Uri uri = ContentUris.withAppendedId(MovieColumns.CONTENT_URI, movie.getMovieId());
+            String where = MovieColumns.MOVIE_ID + "=?";
+            int rows = getActivity()
+                    .getContentResolver()
+                    .delete(MovieColumns.CONTENT_URI, where, new String[] {String.valueOf(movie.getMovieId())});
+
+            Log.i("delete", "Rows deleted: " + rows);
+
+            getActivity().getContentResolver().notifyChange(uri, null);
+
+            mFavoritebutton.setPressed(false);
+        }
+        else {
+            Toast.makeText(getActivity(),"ADDED "+movie.getTitle(),Toast.LENGTH_LONG).show();
+            movie.setFavorite(true);
+            //////movie.save();
+
+            MovieContentValues values = new MovieContentValues();
+
+            values.putMovieId(movie.getMovieId());
+            values.putAdult(movie.getAdult());
+            values.putBackdropPath(movie.getBackdropPath());
+            values.putOriginalLanguage(movie.getOriginalLanguage());
+            values.putOriginalTitle(movie.getOriginalTitle());
+            values.putOverview(movie.getOverview());
+            values.putReleaseDate(movie.getReleaseDate());
+            values.putPosterPath(movie.getPosterPath());
+            values.putPopularity(movie.getPopularity());
+            values.putTitle(movie.getTitle());
+            values.putVideo(movie.getVideo());
+            values.putVoteAverage(movie.getVoteAverage());
+            values.putVoteCount(movie.getVoteCount());
+            values.putFavorite(movie.isFavorite());
+
+            getActivity()
+                    .getContentResolver()
+                    .insert(MovieColumns.CONTENT_URI, values.values());
+
+            mFavoritebutton.setPressed(true);
+        }
+
+
+
+        ((mCallback) getActivity())
+                .onFavoritedMovie(movie);
+
+    }
+
+    @OnClick(R.id.movie_detail_favorite_button)
+    public void onFavoriteButtonClick(View view) {
+        Log.d("clic","true");
+
+
+    }
+
+
+    /**
+     * A callback interface that all activities containing this fragment must
+     * implement. This mechanism allows activities to be notified of item
+     * selections.
+     */
+    public interface mCallback {
+        /**
+         * DetailFragmentCallback for when an item has been selected.
+         */
+        public void onFavoritedMovie(Movie movie);
+    }
+
 
 
 }

@@ -43,6 +43,8 @@
     <item name="movie_detail_text_rating" type="id"/>
     <item name="movie_detail_text_synopsis" type="id"/>
     <item name="movie_detail_trailer_container" type="id"/>
+    <item name="movie_detail_favorite_button" type="id"/>
+
 
     <!-- Movie Trailer -->
     <item name="movie_trailer_image_play" type="id"/>

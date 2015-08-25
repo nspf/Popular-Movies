@@ -39,9 +39,10 @@ dependencies {
 
     compile 'com.jakewharton:butterknife:7.0.1'
 
-    compile 'com.michaelpardo:activeandroid:3.1.0-SNAPSHOT'
+    //compile 'com.michaelpardo:activeandroid:3.1.0-SNAPSHOT'
 
-    //compile 'com.github.triplet.simpleprovider:simpleprovider:1.1.0'
+    compile 'com.squareup.okhttp:okhttp:2.4.0'
+    compile 'com.squareup.okhttp:okhttp-urlconnection:2.0.0'
 
-
+    compile 'org.chalup.microorm:microorm:0.6.0'
 }

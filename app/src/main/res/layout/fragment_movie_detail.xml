@@ -97,12 +97,16 @@
     </android.support.v4.widget.NestedScrollView>
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab"
-        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_alignBottom="@id/movie_detail_appbar"
-        android:layout_marginBottom="-32dp"
-        android:layout_marginRight="20dp"/>
+        android:layout_width="wrap_content"
+        android:id="@id/movie_detail_favorite_button"
+        app:layout_anchor="@id/movie_detail_appbar"
+        app:layout_anchorGravity="bottom|right|end"
+        android:src="@drawable/ic_bookmark_grey600_24dp"
+        android:layout_margin="@dimen/fab_margin"
+        app:borderWidth="0dp"
+        android:clickable="true"
+        android:tint="@color/accent"
+        android:background="@drawable/selector_favorite_button"/>
 
 </android.support.design.widget.CoordinatorLayout>

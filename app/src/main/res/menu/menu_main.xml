@@ -34,6 +34,10 @@
                 <item
                     android:id="@+id/menu_highest_rated"
                     android:title="@string/menu.highest_rated" />
+
+                <item
+                    android:id="@+id/menu_favorites"
+                    android:title="@string/menu.favorites" />
             </group>
         </menu>
 

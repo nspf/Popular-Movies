@@ -16,14 +16,20 @@
 
 package com.example.android.popularmovies.data.api;
 
+import android.util.Log;
+
 import com.example.android.popularmovies.data.model.Movie;
 import com.example.android.popularmovies.data.model.MovieData;
 import com.example.android.popularmovies.data.model.Video;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+import com.squareup.okhttp.Cache;
+import com.squareup.okhttp.OkHttpClient;
 
+import java.io.File;
 import java.lang.reflect.Type;
 import java.util.List;
+import java.util.UUID;
 
 import retrofit.Callback;
 import retrofit.RequestInterceptor;
@@ -66,6 +72,25 @@ public final class MoviesService {
     public static MoviesApi getMoviesApiClient() {
         Type listType = new TypeToken<List<Movie>>() {
         }.getType();
+
+
+        //Setup OkHttp
+        File httpCacheDirectory = new File(System.getProperty("java.io.tmpdir"), UUID.randomUUID().toString());
+
+        Cache cache = null;
+        try {
+            cache = new Cache(httpCacheDirectory, 10 * 1024 * 1024);
+        } catch (Exception e) {
+            Log.e("OKHttp", "Could not create http cache", e);
+        }
+
+        OkHttpClient okHttpClient = new OkHttpClient();
+        if (cache != null) {
+            okHttpClient.setCache(cache);
+        }
+
+
+
         if (sMoviesService == null) {
             RestAdapter restAdapter = new RestAdapter.Builder()
                     .setEndpoint(API_URL_BASE)
@@ -77,7 +102,8 @@ public final class MoviesService {
                     })
                     .setConverter(new GsonConverter(new GsonBuilder().registerTypeAdapter(
                             listType, new MovieListDeserializer()).create()))
-                    //.setLogLevel(RestAdapter.LogLevel.FULL)
+                    .setLogLevel(RestAdapter.LogLevel.FULL)
+                    //.setClient(new OkClient(okHttpClient))
                     .build();
 
             sMoviesService = restAdapter.create(MoviesApi.class);

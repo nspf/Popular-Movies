@@ -19,91 +19,93 @@ package com.example.android.popularmovies.data.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.util.Log;
 
-import com.activeandroid.Model;
-import com.activeandroid.annotation.Column;
-import com.activeandroid.annotation.Table;
+import com.example.android.popularmovies.data.provider.movie.MovieColumns;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import org.chalup.microorm.annotations.Column;
 
-@Table(name = "movies")
-public class Movie extends Model implements Parcelable{
+
+
+public class Movie implements Parcelable{
 
     /*
      * @Expose - expose the field to Gson
      * @SerializedName("") - name used by Gson
-     * @Column("") - column name used by ActiveAndroid
+     * @Column() - column name used by MicroOrm
      */
 
     @Expose
-    @Column(name = "movie_id", unique = true, onUniqueConflict = Column.ConflictAction.IGNORE)
+    @Column(MovieColumns.MOVIE_ID)
     public Integer id;
 
     @Expose
-    @Column(name = "adult")
+    @Column(MovieColumns.ADULT)
     public Boolean adult;
 
 
     @SerializedName("backdrop_path")
     @Expose
-    @Column(name = "backdrop_path")
+    @Column(MovieColumns.BACKDROP_PATH)
     public String backdropPath;
 
     @SerializedName("original_language")
-    @Column(name = "original_language")
+    @Column(MovieColumns.ORIGINAL_LANGUAGE)
     @Expose
     public String originalLanguage;
 
 
     @SerializedName("original_title")
-    @Column(name = "original_title")
+    @Column(MovieColumns.ORIGINAL_TITLE)
     @Expose
     public String originalTitle;
 
 
-    @Column(name = "overview")
+    @Column(MovieColumns.OVERVIEW)
     @Expose
     public String overview;
 
 
     @SerializedName("release_date")
-    @Column(name = "release_date")
+    @Column(MovieColumns.RELEASE_DATE)
     @Expose
     public String releaseDate;
 
 
     @SerializedName("poster_path")
-    @Column(name = "poster_path")
+    @Column(MovieColumns.POSTER_PATH)
     @Expose
     public String posterPath;
 
 
-    @Column(name = "popularity")
+    @Column(MovieColumns.POPULARITY)
     @Expose
     public Double popularity;
 
-    @Column(name = "title")
+    @Column(MovieColumns.TITLE)
     @Expose
     public String title;
 
 
-    @Column(name = "video")
+    @Column(MovieColumns.VIDEO)
     @Expose
     public Boolean video;
 
 
     @SerializedName("vote_average")
-    @Column(name = "vote_average")
+    @Column(MovieColumns.VOTE_AVERAGE)
     @Expose
     public Double voteAverage;
 
 
     @SerializedName("vote_count")
-    @Column(name = "vote_count")
+    @Column(MovieColumns.VOTE_COUNT)
     @Expose
     public Integer voteCount;
+
+    @Column(MovieColumns.FAVORITE)
+    public Boolean favorite = false;
 
     public static final String BASE_IMAGE_URL = "http://image.tmdb.org/t/p/";
     public static final String POSTER_185 = "w185";
@@ -128,6 +130,9 @@ public class Movie extends Model implements Parcelable{
         video = in.readByte() !=0;
         voteAverage = in.readDouble();
         voteCount = in.readInt();
+        favorite = in.readByte() !=0;
+
+
     }
 
     @Override
@@ -139,8 +144,7 @@ public class Movie extends Model implements Parcelable{
     public void writeToParcel(Parcel out, int flags) {
         out.writeByte((byte) (getAdult() ? 1 : 0));
         out.writeString(getBackdropPath());
-        Log.d("getid", getMovieId() + "");
-        out.writeLong(getMovieId());
+        out.writeInt(getMovieId());
         out.writeString(getOriginalLanguage());
         out.writeString(getOverview());
         out.writeString(getReleaseDate());
@@ -150,6 +154,7 @@ public class Movie extends Model implements Parcelable{
         out.writeByte((byte) (getVideo() ? 1 : 0));
         out.writeDouble(getVoteAverage());
         out.writeInt(getVoteCount());
+        out.writeByte((byte) (isFavorite() ? 1 : 0));
     }
 
     public static final Parcelable.Creator<Movie> CREATOR = new Parcelable.Creator<Movie>() {
@@ -294,6 +299,14 @@ public class Movie extends Model implements Parcelable{
 
     public String getFullBackdropPath() {
         return BASE_IMAGE_URL + BACKDROP_300 + getBackdropPath();
+    }
+
+    public Boolean isFavorite() {
+        return favorite;
+    }
+
+    public void setFavorite(Boolean favorite) {
+        this.favorite = favorite;
     }
 
 }
