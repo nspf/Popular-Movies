@@ -23,7 +23,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Toast;
 
-import com.example.android.popularmovies.FavoriteMovieEvent;
 import com.example.android.popularmovies.data.api.MoviesService;
 import com.example.android.popularmovies.data.model.Movie;
 import com.example.android.popularmovies.data.provider.movie.MovieColumns;
@@ -148,12 +147,6 @@ public class MovieListFragment extends BaseMovieListFragment{
             }
 
         }
-    }
-
-
-    @SuppressWarnings("unused")
-    public void onEvent(FavoriteMovieEvent event) {
-        mMovieListAdapter.setItemFavorite(mMovieListAdapter.getSelectedItem(), event.getValue().isFavorite());
     }
 
 }

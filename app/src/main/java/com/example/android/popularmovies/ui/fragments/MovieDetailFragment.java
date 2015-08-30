@@ -32,6 +32,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.graphics.Palette;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -46,13 +47,14 @@ import com.example.android.popularmovies.R;
 import com.example.android.popularmovies.data.api.MoviesService;
 import com.example.android.popularmovies.data.model.Movie;
 import com.example.android.popularmovies.data.model.MovieData;
+import com.example.android.popularmovies.data.model.Result;
 import com.example.android.popularmovies.data.model.Youtube;
 import com.example.android.popularmovies.data.provider.movie.MovieColumns;
 import com.example.android.popularmovies.data.provider.movie.MovieContentValues;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
-import org.chalup.microorm.MicroOrm;
+import java.util.List;
 
 import butterknife.Bind;
 import butterknife.BindColor;
@@ -63,17 +65,17 @@ import de.greenrobot.event.EventBus;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
-public class MovieDetailFragment extends Fragment /*implements LoaderManager.LoaderCallbacks<Cursor> */{
+public class MovieDetailFragment extends Fragment {
 
     private static final EventBus bus = EventBus.getDefault();
     public static final String MOVIE = "movie";
     private static final int DETAIL_LOADER = 1;
 
     private Movie mMovieDetail;
+    private List<Result> mReviews;
+    private List<Youtube> mTrailers;
+
     private View mView;
-    private Uri mUri;
-    private int mPosition;
-    MicroOrm mOrm;
 
     @Bind(R.id.movie_detail_image_backdrop)     ImageView mMovieBackdrop;
     @Bind(R.id.movie_detail_image_poster)       ImageView mMoviePoster;
@@ -81,11 +83,12 @@ public class MovieDetailFragment extends Fragment /*implements LoaderManager.Loa
     @Bind(R.id.movie_detail_text_date)          TextView mMovieDate;
     @Bind(R.id.movie_detail_text_rating)        TextView mMovieRating;
     @Bind(R.id.movie_detail_text_synopsis)      TextView mMovieSynopsis;
-    @Nullable @Bind(R.id.movie_detail_toolbar)            Toolbar mToolbar;
     @Bind(R.id.movie_detail_collapsing_toolbar) CollapsingToolbarLayout mCollapsingToolbar;
     @Bind(R.id.movie_detail_trailer_container)  LinearLayout mMovieTrailerContainer;
+    @Bind(R.id.movie_detail_review_container)  LinearLayout mMovieReviewContainer;
     @Bind(R.id.movie_detail_favorite_button) FloatingActionButton mFavoritebutton;
 
+    @Nullable @Bind(R.id.movie_detail_toolbar)            Toolbar mToolbar;
 
     @BindDrawable(R.drawable.no_poster)         Drawable mMovieErrorImg;
     @BindColor(R.color.transparent) int mColorTransparent;
@@ -94,14 +97,8 @@ public class MovieDetailFragment extends Fragment /*implements LoaderManager.Loa
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-
-            //Bundle bundle = this.getArguments();
-            //mUri = bundle.getParcelable(MOVIE);
             mMovieDetail = getArguments().getParcelable(MOVIE);
-            Log.d("detail",mMovieDetail.toString());
-            ///mPosition = bundle.getInt("id");
             EventBus.getDefault().register(this);
-
         }
 
     }
@@ -118,8 +115,6 @@ public class MovieDetailFragment extends Fragment /*implements LoaderManager.Loa
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        //////getLoaderManager().initLoader(DETAIL_LOADER, null, this);
-
         if (mToolbar != null) {
             ((AppCompatActivity)getActivity()).setSupportActionBar(mToolbar);
             ActionBar mActionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
@@ -128,13 +123,8 @@ public class MovieDetailFragment extends Fragment /*implements LoaderManager.Loa
             }
         }
 
-        //((AppCompatActivity)getActivity()).setSupportActionBar(mToolbar);
-
-
 
         mCollapsingToolbar.setTitle(mMovieDetail.getTitle());
-
-
         mCollapsingToolbar.setExpandedTitleColor(mColorTransparent);
 
         Picasso.with(getActivity())
@@ -175,7 +165,6 @@ public class MovieDetailFragment extends Fragment /*implements LoaderManager.Loa
         mMovieRating.setText("" + mMovieDetail.getVoteAverage());
         mMovieSynopsis.setText(mMovieDetail.getOverview());
 
-        Log.i("movie id", "" + mMovieDetail.getMovieId());
 
         if(mMovieDetail.isFavorite()) {
             mFavoritebutton.setPressed(true);
@@ -187,8 +176,7 @@ public class MovieDetailFragment extends Fragment /*implements LoaderManager.Loa
         mFavoritebutton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //Movie movie = Movie.select(mMovieDetail.getMovieId());
-                        setFavorite(mMovieDetail, true);
+                setFavorite(mMovieDetail, true);
             }
         });
 
@@ -206,43 +194,66 @@ public class MovieDetailFragment extends Fragment /*implements LoaderManager.Loa
                     @Override
                     public void success(final MovieData movieData, Response response) {
 
-                        /*Log.d("trailers", "" + movieData.getTrailers().getYoutube().size());
-                        Log.d("reviews", "" + movieData.getReviews().getResults().size());
                         Log.d("tagline", "" + movieData.getTagline());
                         Log.d("homepage", "" + movieData.getHomepage());
-                        Log.d("video", "" + movieData.getVideo());*/
+                        Log.d("video", "" + movieData.getVideo());
 
 
-                        //TODO: if videos.videos.size() > 0 , hasTrailers = true
+                        if (movieData.getReviews().getResults().size() > 0) {
+                            mReviews = movieData.getReviews().getResults();
 
-                        //TODO: loop for, only if reponse has trailers
-                        //If so, the backdrop image must show a play icon
-                        for (final Youtube video : movieData.getTrailers().getYoutube()) {
+                            for (final Result review : mReviews) {
 
-                            //TODO: find a shorter way to to this
-                            View mMovieTrailerItem = mView.inflate(getActivity(), R.layout.movie_trailer_item, null);
-                            mMovieTrailerItem.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View view) {
-                                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.youtube.com/watch?v=" + video.getSource())));
-                                }
-                            });
+                                View mMovieReviewItem = mView.inflate(getActivity(), R.layout.movie_review_item, null);
 
-                            TextView mMovieTrailerTitle = (TextView) mMovieTrailerItem.findViewById(R.id.movie_trailer_text_title);
-                            mMovieTrailerTitle.setText(video.getName());
+                                TextView mMovieReviewAuthor = (TextView) mMovieReviewItem.findViewById(R.id.movie_review_text_author);
+                                mMovieReviewAuthor.setText(review.getAuthor());
 
-                            mMovieTrailerContainer.addView(mMovieTrailerItem);
+                                TextView mMovieReviewUrl = (TextView) mMovieReviewItem.findViewById(R.id.movie_review_text_url);
+                                mMovieReviewUrl.setText(review.getUrl());
 
+                                TextView mMovieReviewContent = (TextView) mMovieReviewItem.findViewById(R.id.movie_review_text_content);
+                                mMovieReviewContent.setText(review.getContent());
+
+                                mMovieReviewContent.setSingleLine(false);
+                                mMovieReviewContent.setEllipsize(TextUtils.TruncateAt.END);
+                                int n = 4; // the exact number of lines you want to display
+                                mMovieReviewContent.setLines(n);
+
+                                mMovieReviewContainer.addView(mMovieReviewItem);
+
+                            }
                         }
 
 
-                        //TODO: if hasTrailers = true, enable clicListener and show play button in backdrop
-                        /*mMovieBackdrop.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.youtube.com/watch?v=" + videos.videos.get(0).getKey())));
+                        if (movieData.getTrailers().getYoutube().size() > 0) {
+                            mTrailers = movieData.getTrailers().getYoutube();
+
+                            for (final Youtube video : mTrailers) {
+
+                                View mMovieTrailerItem = mView.inflate(getActivity(), R.layout.movie_trailer_item, null);
+                                mMovieTrailerItem.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View view) {
+                                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.youtube.com/watch?v=" + video.getSource())));
+                                    }
+                                });
+
+                                TextView mMovieTrailerTitle = (TextView) mMovieTrailerItem.findViewById(R.id.movie_trailer_text_title);
+                                mMovieTrailerTitle.setText(video.getName());
+
+                                mMovieTrailerContainer.addView(mMovieTrailerItem);
                             }
-                        });*/
+
+                            //Enable play button in backdrop image
+                            mMovieBackdrop.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.youtube.com/watch?v=" + mTrailers.get(0).getSource())));
+                                }
+                            });
+
+                        }
                     }
 
                     @Override
@@ -253,89 +264,6 @@ public class MovieDetailFragment extends Fragment /*implements LoaderManager.Loa
                 });
     }
 
-
-    /*@Override
-    public Loader<Cursor> onCreateLoader(int id, Bundle args){
-        String selection = null;
-        String [] selectionArgs = null;
-        if (args != null){
-            selection = "id";
-            selectionArgs = new String[]{String.valueOf(mPosition)};
-        }
-        return new CursorLoader(getActivity(),
-                mUri,
-                null,
-                selection,
-                selectionArgs,
-                null);
-    }
-
-    @Override
-    public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
-
-        if (cursor != null) {
-
-            final Cursor data = cursor;
-            data.moveToPosition(mPosition);
-
-            mCollapsingToolbar.setTitle(data.getString(data.getColumnIndex("title")));
-            mCollapsingToolbar.setExpandedTitleColor(mColorTransparent);
-
-            Picasso.with(getActivity())
-                    .load(data.getString(data.getColumnIndex("backdrop_path")))
-                    .error(mMovieErrorImg)
-                    .into(mMovieBackdrop, new Callback() {
-
-                        @Override
-                        public void onSuccess() {
-
-                            Bitmap bitmap = ((BitmapDrawable) mMovieBackdrop.getDrawable()).getBitmap();
-                            new Palette.Builder(bitmap).generate(new Palette.PaletteAsyncListener() {
-
-                                @Override
-                                public void onGenerated(Palette palette) {
-
-                                    Palette.Swatch vibrant = palette.getVibrantSwatch();
-                                    if (vibrant != null) {
-                                        mCollapsingToolbar.setContentScrimColor(vibrant.getRgb());
-                                    }
-                                }
-                            });
-                        }
-
-                        @Override
-                        public void onError() {
-
-                        }
-                    });
-
-            Picasso.with(getActivity())
-                    .load(data.getString(data.getColumnIndex("poster_path")))
-                    .error(mMovieErrorImg)
-                    .into(mMoviePoster);
-
-            mMovieTitle.setText(data.getString(data.getColumnIndex("title")));
-            mMovieDate.setText(data.getString(data.getColumnIndex("release_date")));
-            mMovieRating.setText(data.getString(data.getColumnIndex("vote_average")));
-            mMovieSynopsis.setText(data.getString(data.getColumnIndex("overview")));
-
-            mFavoritebutton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    setFavorite(Movie.select(data.getInt(data.getColumnIndex("movie_id"))),true);
-                }
-            });
-
-            fetchMovieData(data.getLong(data.getColumnIndex("movie_id")));
-
-
-        }
-    }
-
-    @Override
-    public void onLoaderReset(Loader<Cursor> loader) {
-
-    }*/
 
     public void setFavorite(Movie movie, Boolean favorite) {
         if(movie.isFavorite()) {
@@ -357,7 +285,6 @@ public class MovieDetailFragment extends Fragment /*implements LoaderManager.Loa
         else {
             Toast.makeText(getActivity(),"ADDED "+movie.getTitle(),Toast.LENGTH_LONG).show();
             movie.setFavorite(true);
-            //////movie.save();
 
             MovieContentValues values = new MovieContentValues();
 
@@ -383,22 +310,16 @@ public class MovieDetailFragment extends Fragment /*implements LoaderManager.Loa
             mFavoritebutton.setPressed(true);
         }
 
-Log.d("movie id", movie.getMovieId()+"");
         bus.post(new FavoriteMovieEvent(movie));
 
     }
 
     @OnClick(R.id.movie_detail_favorite_button)
     public void onFavoriteButtonClick(View view) {
-        Log.d("clic","true");
-
-
     }
 
     public void onEvent(FavoriteMovieEvent event){
         event.getValue();
-        Log.d("getvalue",""+event.getValue());
     }
-
 
 }

@@ -88,6 +88,10 @@
                 style="@style/TextMovieDetailSynopsis" />
 
             <LinearLayout
+                android:id="@id/movie_detail_review_container"
+                style="@style/MovieDetailReviewContainer"/>
+
+            <LinearLayout
                 android:id="@id/movie_detail_trailer_container"
                 style="@style/MovieDetailTrailerContainer"/>
 

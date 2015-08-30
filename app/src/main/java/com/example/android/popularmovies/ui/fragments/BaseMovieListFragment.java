@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
+import com.example.android.popularmovies.FavoriteMovieEvent;
 import com.example.android.popularmovies.R;
 import com.example.android.popularmovies.data.model.Movie;
 import com.example.android.popularmovies.data.provider.movie.MovieColumns;
@@ -124,6 +125,12 @@ public class BaseMovieListFragment extends Fragment implements LoaderManager.Loa
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
 
+    }
+
+
+    @SuppressWarnings("unused")
+    public void onEvent(FavoriteMovieEvent event) {
+        mMovieListAdapter.setItemFavorite(mMovieListAdapter.getSelectedItem(), event.getValue().isFavorite());
     }
 
 }
