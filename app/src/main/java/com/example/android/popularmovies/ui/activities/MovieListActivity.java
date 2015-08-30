@@ -97,9 +97,9 @@ public class MovieListActivity extends AppCompatActivity {
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
-        //MenuItem item = menu.findItem(getMovieListOrder());
-        //item.setChecked(true);
-        //mToolbar.setSubtitle(item.getTitle());
+        MenuItem item = menu.findItem(getMovieListOrder());
+        item.setChecked(true);
+        mToolbar.setSubtitle(item.getTitle());
         return true;
     }
 
@@ -134,7 +134,7 @@ public class MovieListActivity extends AppCompatActivity {
 
     public Integer getMovieListOrder() {
         return getPreferences(Context.MODE_PRIVATE)
-                .getInt(SORT_BY, 0);
+                .getInt(SORT_BY, mMenuMostPopular);
     }
 
 
