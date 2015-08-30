@@ -50,12 +50,19 @@
     <item name="movie_detail_text_rating" type="id"/>
     <item name="movie_detail_text_synopsis" type="id"/>
     <item name="movie_detail_trailer_container" type="id"/>
+    <item name="movie_detail_review_container" type="id"/>
     <item name="movie_detail_favorite_button" type="id"/>
 
 
     <!-- Movie Trailer -->
     <item name="movie_trailer_image_play" type="id"/>
     <item name="movie_trailer_text_title" type="id"/>
+
+    <!-- Movie Review -->
+    <item name="movie_review_text_author" type="id"/>
+    <item name="movie_review_text_url" type="id"/>
+    <item name="movie_review_text_content" type="id"/>
+
 
     <!-- Empty state view widget -->
     <item name="widget_empty_state_view_container" type="id"/>
