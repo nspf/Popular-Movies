@@ -37,15 +37,17 @@ public class FavoriteMoviesFragment extends BaseMovieListFragment{
         if (cursor != null && cursor.moveToFirst()) {
             List<Movie> favoriteMovies = mOrm.listFromCursor(cursor, Movie.class);
             mMovieList = new ArrayList<>(favoriteMovies);
-            mMovieListAdapter.newData(mMovieList);
         }
 
         else {
-            mProgressBar.setVisibility(View.GONE);
+            mMovieList.clear();
             mEmptyView.setMessageText("No favorite movies");
             mEmptyView.setVisibility(View.VISIBLE);
-
         }
+
+        mMovieListAdapter.newData(mMovieList);
+        mProgressBar.setVisibility(View.GONE);
+
     }
 
 }
