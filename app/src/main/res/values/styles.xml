@@ -125,7 +125,7 @@
 
     <style name ="MovieDetailTrailerContainer" parent="Fill.Width">
         <item name="android:orientation">vertical</item>
-        <item name="android:layout_below">@id/movie_detail_text_synopsis</item>
+        <item name="android:layout_below">@id/movie_detail_review_container</item>
         <item name="android:layout_margin">@dimen/spacing_large</item>
     </style>
 
@@ -150,6 +150,30 @@
         <item name="android:singleLine">true</item>
         <item name="android:gravity">center_vertical</item>
         <item name="android:layout_centerVertical">true</item>
+        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Subhead</item>
+    </style>
+
+    <!-- Movie review -->
+
+    <style name ="MovieDetailReviewContainer" parent="Fill.Width">
+        <item name="android:orientation">vertical</item>
+        <item name="android:layout_below">@id/movie_detail_text_synopsis</item>
+        <item name="android:layout_margin">@dimen/spacing_large</item>
+    </style>
+
+    <style name ="MovieReviewItem" parent="Fill.Width">
+    </style>
+
+    <style name ="MovieReviewAuthor" parent="Match">
+        <item name="android:singleLine">true</item>
+        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Subhead</item>
+    </style>
+
+    <style name ="MovieReviewUrl" parent="Match">
+        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Caption</item>
+    </style>
+
+    <style name ="MovieReviewContent" parent="Match">
         <item name="android:textAppearance">@style/TextAppearance.AppCompat.Subhead</item>
     </style>
 
