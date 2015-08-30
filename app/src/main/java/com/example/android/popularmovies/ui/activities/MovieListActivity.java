@@ -43,6 +43,7 @@ public class MovieListActivity extends AppCompatActivity {
     private final String SORT_BY = "sort_by";
     private final String MOST_POPULAR = "popularity.desc";
     private final String HIGHEST_RATED = "vote_average.desc";
+    private final String MOST_RATED = "vote_count.desc";
     private final String MOVIE_LIST_FRAGMENT_TAG = "movieListFragment";
 
     private BaseMovieListFragment mMovieListFragment;
@@ -50,6 +51,8 @@ public class MovieListActivity extends AppCompatActivity {
 
     private final int mMenuMostPopular = R.id.menu_most_popular;
     private final int mMenuHighestRated = R.id.menu_highest_rated;
+    private final int mMenuMostRated = R.id.menu_most_rated;
+
     private final int mMenuFavorites = R.id.menu_favorites;
 
     private static final String DETAILFRAGMENT_TAG = "DFTAG";
@@ -94,6 +97,7 @@ public class MovieListActivity extends AppCompatActivity {
         return super.onCreateOptionsMenu(menu);
     }
 
+
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
@@ -110,6 +114,7 @@ public class MovieListActivity extends AppCompatActivity {
 
             case mMenuMostPopular:
             case mMenuHighestRated:
+            case mMenuMostRated:
             case mMenuFavorites:
                 item.setChecked(!item.isChecked());
                 setMovieListOrder(item.getItemId());
@@ -149,7 +154,18 @@ public class MovieListActivity extends AppCompatActivity {
                 break;
             case mMenuHighestRated:
                 sortedMovieListFragment(HIGHEST_RATED);
+                break;
+            case mMenuMostRated:
+                sortedMovieListFragment(MOST_RATED);
+                break;
+
         }
+        /*if (getMovieListOrder() == mMenuFavorites) {
+            loadFragment(new FavoriteMoviesFragment());
+        } else {
+            sortedMovieListFragment(getMovieListOrder());
+
+        }*/
 
     }
 
