@@ -15,12 +15,10 @@ class MovieListDeserializer implements JsonDeserializer<List<Movie>>
 {
     @Override
     public List<Movie> deserialize(JsonElement json, Type listType, JsonDeserializationContext context) throws JsonParseException {
-
-        //JsonArray content = json.getAsJsonObject().get("results").getAsJsonArray();
-
-
-        return new Gson().fromJson(json.getAsJsonObject().get("results").getAsJsonArray(), listType);
-
+        return new Gson().fromJson(
+                json.getAsJsonObject()
+                        .get("results")
+                        .getAsJsonArray(), listType);
     }
 
 }
