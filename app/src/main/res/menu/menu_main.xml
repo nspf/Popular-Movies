@@ -30,6 +30,9 @@
                     android:id="@+id/menu_most_popular"
                     android:title="@string/menu.most_popular"
                     android:checked="true"/>
+                <item
+                    android:id="@+id/menu_most_rated"
+                    android:title="@string/menu.most_rated" />
 
                 <item
                     android:id="@+id/menu_highest_rated"
