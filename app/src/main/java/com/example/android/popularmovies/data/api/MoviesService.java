@@ -34,6 +34,7 @@ import java.util.UUID;
 import retrofit.Callback;
 import retrofit.RequestInterceptor;
 import retrofit.RestAdapter;
+import retrofit.client.OkClient;
 import retrofit.converter.GsonConverter;
 import retrofit.http.GET;
 import retrofit.http.Path;
@@ -103,8 +104,8 @@ public final class MoviesService {
                     })
                     .setConverter(new GsonConverter(new GsonBuilder().registerTypeAdapter(
                             listType, new MovieListDeserializer()).create()))
-                    .setLogLevel(RestAdapter.LogLevel.FULL)
-                    //.setClient(new OkClient(okHttpClient))
+                    //.setLogLevel(RestAdapter.LogLevel.FULL)
+                    .setClient(new OkClient(okHttpClient))
                     .build();
 
             sMoviesService = restAdapter.create(MoviesApi.class);
