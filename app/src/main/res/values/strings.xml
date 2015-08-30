@@ -45,6 +45,6 @@
     <string name="widget.empty_state_view_icon_description">Empty state view icon</string>
 
     <!-- Network eror message -->
-    <string name="error.network">Unable to fetch the movies.\nCheck your Internet connection and try again.</string>
+    <string name="error.network">Unable to fetch the movies.\nCheck your Internet connection.</string>
 
 </resources>
