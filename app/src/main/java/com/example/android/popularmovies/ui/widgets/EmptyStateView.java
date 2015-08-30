@@ -46,12 +46,14 @@ public class EmptyStateView extends LinearLayout {
         a.recycle();
     }
 
-    public void setMessageText(CharSequence text) {
+    public EmptyStateView setMessageText(CharSequence text) {
         mMessageText.setText(text);
+        return this;
     }
 
-    public void setMessageIcon(Drawable drawable) {
+    public EmptyStateView setMessageIcon(Drawable drawable) {
         mMessageIcon.setImageDrawable(drawable);
+        return this;
     }
 
 }
