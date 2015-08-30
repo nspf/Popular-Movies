@@ -30,6 +30,8 @@
 
     <!-- Movie list -->
     <string name="movie.list.item_movie_poster">Movie poster</string>
+    <string name="movie.list.item_movie_favorite_button">Favorite movie</string>
+
 
     <!-- Movie detail -->
     <string name="movie.detail.image_backdrop">Movie backdrop</string>
@@ -38,5 +40,11 @@
 
     <!-- Movie trailer -->
     <string name="movie.trailer_play_button">Play trailer video</string>
+
+    <!-- Empty state view icon -->
+    <string name="widget.empty_state_view_icon_description">Empty state view icon</string>
+
+    <!-- Network eror message -->
+    <string name="error.network">Unable to fetch the movies.\nCheck your Internet connection and try again.</string>
 
 </resources>

@@ -70,6 +70,7 @@ public final class MoviesService {
 
 
     public static MoviesApi getMoviesApiClient() {
+
         Type listType = new TypeToken<List<Movie>>() {
         }.getType();
 

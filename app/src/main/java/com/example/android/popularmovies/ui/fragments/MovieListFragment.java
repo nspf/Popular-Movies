@@ -16,79 +16,51 @@
 
 package com.example.android.popularmovies.ui.fragments;
 
+import android.database.Cursor;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v7.widget.GridLayoutManager;
+import android.support.v4.content.Loader;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.example.android.popularmovies.R;
+import com.example.android.popularmovies.FavoriteMovieEvent;
 import com.example.android.popularmovies.data.api.MoviesService;
 import com.example.android.popularmovies.data.model.Movie;
-import com.example.android.popularmovies.ui.adapters.MovieListAdapter;
+import com.example.android.popularmovies.data.provider.movie.MovieColumns;
 
+import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.Bind;
-import butterknife.ButterKnife;
+import de.greenrobot.event.EventBus;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
-public class MovieListFragment extends Fragment {
+public class MovieListFragment extends BaseMovieListFragment{
 
-    private ArrayList<Movie> mMovieList;
-    private MovieListAdapter mMovieListAdapter;
+    private ArrayList<Integer> mFavoriteMovieListIds;
     private String mMovieListOrder;
-    private int mMovieListPage = 1;
-    private int mMovieListColumns = 2;
-
-    private GridLayoutManager mGridLayoutManager;
-
     private boolean mLoading = false;
     private boolean mFirstTime = true;
 
-    private final String MOVIE_LIST = "movie list";
-    private final String PAGE = "page";
     public static final String SORT_BY = "sort_by";
 
-    @Bind(R.id.movie_list_recyclerview) RecyclerView mRecyclerView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setRetainInstance(true);
         if (getArguments() != null) {
             mMovieListOrder = getArguments().getString(SORT_BY);
         }
+
+        EventBus.getDefault().register(this);
     }
 
+
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-
-        View mRootView = inflater.inflate(R.layout.fragment_movie_list, container, false);
-        ButterKnife.bind(this, mRootView);
-
-        if (savedInstanceState == null) {
-            mMovieList = new ArrayList<>();
-            mMovieListPage = 1;
-        } else {
-            mMovieList = savedInstanceState.getParcelableArrayList(MOVIE_LIST);
-            mMovieListPage = savedInstanceState.getInt(PAGE);
-        }
-
-        mMovieListAdapter = new MovieListAdapter(getActivity(), mMovieList);
-
-        mGridLayoutManager = new GridLayoutManager(getActivity(), mMovieListColumns);
-        mRecyclerView.setLayoutManager(mGridLayoutManager);
-        mRecyclerView.setHasFixedSize(true);
-        mRecyclerView.setAdapter(mMovieListAdapter);
+    public void initRecyclerView() {
+        super.initRecyclerView();
         mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
 
             @Override
@@ -107,13 +79,12 @@ public class MovieListFragment extends Fragment {
 
         });
 
-        return mRootView;
     }
+
 
     @Override
     public void onStart() {
         super.onStart();
-
         if (mFirstTime){
             fetchMovieList(mMovieListOrder,mMovieListPage);
             mFirstTime = false;
@@ -129,15 +100,31 @@ public class MovieListFragment extends Fragment {
                         , new Callback<List<Movie>>() {
                     @Override
                     public void success(List<Movie> movies, Response response) {
+
+                        for (Movie movie : movies) {
+                            if (mFavoriteMovieListIds.contains(movie.getMovieId())) {
+                                movie.setFavorite(true);
+                            }
+                        }
+
                         mMovieListAdapter.add(movies);
                         mLoading = false;
                         mMovieListPage++;
-                        Log.i("m",movies.get(0).getTitle());
+
                     }
 
-                    @Override
-                    public void failure(RetrofitError retrofitError) {
-                        Toast.makeText(getActivity(), retrofitError.getMessage(), Toast.LENGTH_SHORT).show();
+                    @Override public void failure(RetrofitError error) {
+                        if (error.getKind() == RetrofitError.Kind.NETWORK) {
+                            if (error.getCause() instanceof SocketTimeoutException) {
+                                Toast.makeText(getActivity(), error.toString() + "socketTimeout", Toast.LENGTH_SHORT).show();
+                            } else {
+                                //mRecyclerView.setEmptyView(mEmptyView);
+                                mEmptyView.setVisibility(View.VISIBLE);
+                                //mEmptyView.setMessageText(mNetworkError);
+                                mProgressBar.setVisibility(View.GONE);
+                            }
+                        } else {
+                            Toast.makeText(getActivity(), error.toString() + "error desconocido", Toast.LENGTH_SHORT).show();                        }
 
                     }
                 });
@@ -148,6 +135,25 @@ public class MovieListFragment extends Fragment {
         super.onSaveInstanceState(outState);
         outState.putParcelableArrayList(MOVIE_LIST, mMovieList);
         outState.putInt(PAGE, mMovieListPage);
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
+        super.onLoadFinished(loader,cursor);
+
+        if (cursor != null) {
+            mFavoriteMovieListIds = new ArrayList<>();
+            for(cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()){
+                mFavoriteMovieListIds.add(cursor.getInt(cursor.getColumnIndex(MovieColumns.MOVIE_ID)));
+            }
+
+        }
+    }
+
+
+    @SuppressWarnings("unused")
+    public void onEvent(FavoriteMovieEvent event) {
+        mMovieListAdapter.setItemFavorite(mMovieListAdapter.getSelectedItem(), event.getValue().isFavorite());
     }
 
 }

@@ -1,0 +1,6 @@
+<resources>
+    <declare-styleable name="EmptyStateView">
+        <attr name="messageText" format="string" />
+        <attr name="messageIcon" format="reference" />
+    </declare-styleable>
+</resources>

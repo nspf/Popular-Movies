@@ -1,0 +1,24 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/widget_empty_state_view_container"
+    android:layout_gravity="center"
+    android:gravity="center"
+    style="@style/Fill.Width">
+
+
+    <ImageView
+        android:id="@id/widget_empty_state_view_icon"
+        android:contentDescription="@string/widget.empty_state_view_icon_description"
+        style="@style/Wrap" />
+
+    <TextView
+        android:id="@id/widget_empty_state_view_text"
+        style="@style/Wrap"
+        android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+        android:textColor="@color/secondary_text_disabled_material_dark"
+        android:layout_margin="@dimen/spacing_large"
+        android:fontFamily="sans-serif-light"
+        android:textAlignment="center"/>
+
+</LinearLayout>
+

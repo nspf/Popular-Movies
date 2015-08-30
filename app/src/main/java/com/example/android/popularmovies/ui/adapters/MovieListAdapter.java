@@ -17,7 +17,6 @@
 package com.example.android.popularmovies.ui.adapters;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.support.v7.graphics.Palette;
@@ -29,10 +28,9 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.android.popularmovies.MovieSelectedEvent;
 import com.example.android.popularmovies.R;
 import com.example.android.popularmovies.data.model.Movie;
-import com.example.android.popularmovies.ui.activities.MovieDetailActivity;
-import com.example.android.popularmovies.ui.fragments.MovieDetailFragment;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
@@ -41,16 +39,23 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.BindColor;
 import butterknife.ButterKnife;
+import de.greenrobot.event.EventBus;
 
 public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.MovieHolder> {
 
     private final Context mContext;
     private final List<Movie> mMovieList;
+    int mitemSelected;
+    private static final EventBus bus = EventBus.getDefault();
 
     public MovieListAdapter(Context context, List<Movie> movieList) {
         this.mContext = context;
         this.mMovieList = movieList;
         setHasStableIds(true);
+
+
+        EventBus.getDefault().register(this);
+
     }
 
     public long getItemId(int position) {
@@ -59,7 +64,8 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.Movi
 
     @Override
     public int getItemCount() {
-        return mMovieList.size();
+        //return mMovieList.size();
+        return mMovieList == null ? 0 : mMovieList.size();
     }
 
     @Override
@@ -76,6 +82,9 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.Movi
 
         holder.mMovieFooter.setBackgroundColor(holder.mColorTransparent);
         holder.mMovieTitle.setTextColor(holder.mColorWhite);
+        holder.mMovieReleaseDate.setTextColor(holder.mColorWhite);
+        holder.mMovieFavoriteButton.setSelected(movie.isFavorite());
+
 
         Picasso.with(mContext)
                 .load(movie.getFullPosterPath())
@@ -101,7 +110,9 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.Movi
                                 Palette.Swatch vibrant = palette.getVibrantSwatch();
                                 if (vibrant != null) {
                                     holder.mMovieFooter.setBackgroundColor(vibrant.getRgb());
-                                    holder.mMovieTitle.setTextColor(vibrant.getBodyTextColor());
+                                    holder.mMovieTitle.setTextColor(vibrant.getTitleTextColor());
+                                    holder.mMovieReleaseDate.setTextColor(vibrant.getBodyTextColor());
+
                                 }
                             }
                         });
@@ -116,6 +127,10 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.Movi
         if(movie.getTitle() != null) {
             holder.mMovieTitle.setText(movie.getTitle());
         }
+
+        if(movie.getYearFromReleaseDate() != null) {
+            holder.mMovieReleaseDate.setText(movie.getYearFromReleaseDate());
+        }
     }
 
     public final class MovieHolder extends RecyclerView.ViewHolder {
@@ -123,6 +138,9 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.Movi
         @Bind(R.id.movie_item_footer) View mMovieFooter;
         @Bind(R.id.movie_item_image_poster) ImageView mMoviePoster;
         @Bind(R.id.movie_item_text_title) TextView mMovieTitle;
+        @Bind(R.id.movie_item_text_release_date) TextView mMovieReleaseDate;
+        @Bind(R.id.movie_item_image_favorite_button) ImageView mMovieFavoriteButton;
+
 
         @BindColor(R.color.transparent) int mColorTransparent;
         @BindColor(android.R.color.white) int mColorWhite;
@@ -135,9 +153,17 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.Movi
                 @Override
                 public void onClick(View v) {
                     Log.i("movie a enviar",mMovieList.get(getAdapterPosition()).getTitle());
-                    Intent intent = new Intent(v.getContext(), MovieDetailActivity.class);
+
+
+                    /*Intent intent = new Intent(v.getContext(), MovieDetailActivity.class);
                     intent.putExtra(MovieDetailFragment.MOVIE, mMovieList.get(getAdapterPosition()));
-                    mContext.startActivity(intent);
+                    mContext.startActivity(intent);*/
+
+                    bus.post(new MovieSelectedEvent(mMovieList.get(getAdapterPosition())));
+
+
+
+                    mitemSelected = getAdapterPosition();
                 }
             });
 
@@ -149,4 +175,34 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.Movi
         notifyDataSetChanged();
     }
 
-}
+    public void newData(List<Movie> movieList) {
+        mMovieList.clear();
+        add(movieList);
+    }
+
+
+    ///TEST
+    /*public Movie getItem(int position) {
+        return mMovieList.get(position);
+    }*/
+
+    public void setItemFavorite(int position, boolean isFavorite) {
+        mMovieList.get(position).setFavorite(isFavorite);
+        notifyItemChanged(position);
+    }
+
+    public int getSelectedItem() {
+        return mitemSelected;
+    }
+
+    /*public void removeMovie(int position) {
+        mMovieList.remove(position);
+        notifyDataSetChanged();
+        notifyItemRemoved(position);
+    }*/
+
+    public void onEvent(MovieSelectedEvent event) {
+
+    }
+
+ }

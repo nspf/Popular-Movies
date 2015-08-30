@@ -45,15 +45,6 @@
                 android:contentDescription="@string/movie.detail.image_backdrop"
                 style="@style/ImageMovieDetailBackdrop"/>
 
-            <android.support.v7.widget.Toolbar
-                android:id="@id/movie_detail_toolbar"
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                app:layout_collapseMode="pin"
-                app:collapseContentDescription="test"
-                app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
-
-
         </android.support.design.widget.CollapsingToolbarLayout>
 
     </android.support.design.widget.AppBarLayout>

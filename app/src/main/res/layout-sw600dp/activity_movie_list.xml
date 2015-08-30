@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:tools="http://schemas.android.com/tools"
+tools:context=".MainActivity"
+tools:ignore="MergeRootFrame"
+style="@style/Match">
+
+<android.support.v7.widget.Toolbar
+    android:id="@id/movie_list_toolbar"
+    android:layout_alignParentTop="true"
+    android:background="?attr/colorPrimary"
+    android:minHeight="?attr/actionBarSize"
+    style="@style/Fill.Width"/>
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="horizontal" android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/movie_list_toolbar">
+
+        <FrameLayout
+            android:id="@id/movie_list_fragment_container"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"/>
+
+        <FrameLayout
+            android:id="@id/movie_detail_fragment_container"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:layout_gravity="center">
+
+            <TextView
+                android:id="@id/movie_detail_fragment_container_empty"
+                android:text="No movie selected"
+                style="@style/Wrap"
+                android:layout_gravity="center"/>
+
+
+        </FrameLayout>
+
+    </LinearLayout>
+
+</RelativeLayout>

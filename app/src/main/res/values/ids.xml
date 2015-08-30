@@ -21,18 +21,25 @@
     <!-- Movie List -->
     <item name="movie_list_fragment_container" type="id"/>
     <item name="movie_list_recyclerview" type="id"/>
+    <item name="movie_list_progressbar" type="id"/>
+    <item name="movie_list_empty_view" type="id"/>
     <item name="movie_list_toolbar" type="id"/>
 
 
     <!-- Movie List Item -->
     <item name="movie_item_container" type="id"/>
     <item name="movie_item_image_poster" type="id"/>
-    <item name="movie_item_text_title" type="id"/>
     <item name="movie_item_footer" type="id"/>
+    <item name="movie_item_text_title" type="id"/>
+    <item name="movie_item_text_release_date" type="id"/>
+    <item name="movie_item_image_favorite_button" type="id"/>
+
+
 
 
     <!-- Movie Detail -->
     <item name="movie_detail_fragment_container" type="id"/>
+    <item name="movie_detail_fragment_container_empty" type="id"/>
     <item name="movie_detail_appbar" type="id"/>
     <item name="movie_detail_collapsing_toolbar" type="id"/>
     <item name="movie_detail_image_backdrop" type="id"/>
@@ -50,6 +57,9 @@
     <item name="movie_trailer_image_play" type="id"/>
     <item name="movie_trailer_text_title" type="id"/>
 
-    <!-- Movie Review -->
+    <!-- Empty state view widget -->
+    <item name="widget_empty_state_view_container" type="id"/>
+    <item name="widget_empty_state_view_text" type="id"/>
+    <item name="widget_empty_state_view_icon" type="id"/>
 
 </resources>

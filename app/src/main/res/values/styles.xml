@@ -39,17 +39,28 @@
 
     <style name ="MovieListItemFooter" parent="Fill.Width">
         <item name="android:layout_height">@dimen/movie_list_footer_height</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:orientation">horizontal</item>
         <item name="android:background">@color/primary</item>
         <item name="android:layout_gravity">bottom</item>
+        <item name="android:gravity">center_vertical</item>
     </style>
 
-    <style name ="TextMovieListTitle" parent="Match">
+    <style name ="TextMovieListTitle" parent="Fill.Width">
         <item name="android:textColor">@android:color/white</item>
         <item name="android:singleLine">true</item>
-        <item name="android:paddingLeft">@dimen/spacing_large</item>
-        <item name="android:paddingRight">@dimen/spacing_large</item>
         <item name="android:gravity">center_vertical</item>
         <item name="android:textAppearance">@style/TextAppearance.AppCompat.Subhead</item>
+        <item name="android:layout_marginLeft">@dimen/spacing_large</item>
+    </style>
+
+    <style name ="TextMovieListReleaseDate" parent="Fill.Width">
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Caption</item>
+        <item name="android:layout_marginLeft">@dimen/spacing_large</item>
     </style>
 
 
@@ -57,6 +68,12 @@
         <item name="android:minHeight">@dimen/movie_poster_min_height</item>
         <item name="android:scaleType">centerCrop</item>
         <item name="android:contentDescription">@string/movie.list.item_movie_poster</item>
+    </style>
+
+    <style name ="MovieListItemFavoriteButton" parent="Wrap">
+        <item name="android:contentDescription">@string/movie.list.item_movie_favorite_button</item>
+        <item name="android:background">@drawable/selector_favorite_button</item>
+        <item name="android:tint">@android:color/white</item>
     </style>
 
     <!-- Movie Detail -->

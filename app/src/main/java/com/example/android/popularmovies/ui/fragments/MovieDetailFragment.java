@@ -24,6 +24,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -40,6 +41,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.android.popularmovies.FavoriteMovieEvent;
 import com.example.android.popularmovies.R;
 import com.example.android.popularmovies.data.api.MoviesService;
 import com.example.android.popularmovies.data.model.Movie;
@@ -57,11 +59,13 @@ import butterknife.BindColor;
 import butterknife.BindDrawable;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import de.greenrobot.event.EventBus;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 public class MovieDetailFragment extends Fragment /*implements LoaderManager.LoaderCallbacks<Cursor> */{
 
+    private static final EventBus bus = EventBus.getDefault();
     public static final String MOVIE = "movie";
     private static final int DETAIL_LOADER = 1;
 
@@ -77,7 +81,7 @@ public class MovieDetailFragment extends Fragment /*implements LoaderManager.Loa
     @Bind(R.id.movie_detail_text_date)          TextView mMovieDate;
     @Bind(R.id.movie_detail_text_rating)        TextView mMovieRating;
     @Bind(R.id.movie_detail_text_synopsis)      TextView mMovieSynopsis;
-    @Bind(R.id.movie_detail_toolbar)            Toolbar mToolbar;
+    @Nullable @Bind(R.id.movie_detail_toolbar)            Toolbar mToolbar;
     @Bind(R.id.movie_detail_collapsing_toolbar) CollapsingToolbarLayout mCollapsingToolbar;
     @Bind(R.id.movie_detail_trailer_container)  LinearLayout mMovieTrailerContainer;
     @Bind(R.id.movie_detail_favorite_button) FloatingActionButton mFavoritebutton;
@@ -96,7 +100,10 @@ public class MovieDetailFragment extends Fragment /*implements LoaderManager.Loa
             mMovieDetail = getArguments().getParcelable(MOVIE);
             Log.d("detail",mMovieDetail.toString());
             ///mPosition = bundle.getInt("id");
+            EventBus.getDefault().register(this);
+
         }
+
     }
 
     @Override
@@ -113,12 +120,17 @@ public class MovieDetailFragment extends Fragment /*implements LoaderManager.Loa
 
         //////getLoaderManager().initLoader(DETAIL_LOADER, null, this);
 
-        ((AppCompatActivity)getActivity()).setSupportActionBar(mToolbar);
-
-        ActionBar mActionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
-        if (mActionBar != null){
-            mActionBar.setDisplayHomeAsUpEnabled(true);
+        if (mToolbar != null) {
+            ((AppCompatActivity)getActivity()).setSupportActionBar(mToolbar);
+            ActionBar mActionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
+            if (mActionBar != null){
+                mActionBar.setDisplayHomeAsUpEnabled(true);
+            }
         }
+
+        //((AppCompatActivity)getActivity()).setSupportActionBar(mToolbar);
+
+
 
         mCollapsingToolbar.setTitle(mMovieDetail.getTitle());
 
@@ -371,10 +383,8 @@ public class MovieDetailFragment extends Fragment /*implements LoaderManager.Loa
             mFavoritebutton.setPressed(true);
         }
 
-
-
-        ((mCallback) getActivity())
-                .onFavoritedMovie(movie);
+Log.d("movie id", movie.getMovieId()+"");
+        bus.post(new FavoriteMovieEvent(movie));
 
     }
 
@@ -398,6 +408,11 @@ public class MovieDetailFragment extends Fragment /*implements LoaderManager.Loa
         public void onFavoritedMovie(Movie movie);
     }
 
+
+    public void onEvent(FavoriteMovieEvent event){
+        event.getValue();
+        Log.d("getvalue",""+event.getValue());
+    }
 
 
 }
