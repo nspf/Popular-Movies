@@ -41,7 +41,10 @@ public class FavoriteMoviesFragment extends BaseMovieListFragment{
         }
 
         else {
+            mProgressBar.setVisibility(View.GONE);
+            mEmptyView.setMessageText("No favorite movies");
             mEmptyView.setVisibility(View.VISIBLE);
+
         }
     }
 
