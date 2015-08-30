@@ -115,7 +115,9 @@
         <item name="android:layout_marginLeft">@dimen/spacing_large</item>
         <item name="android:layout_marginRight">@dimen/spacing_large</item>
         <item name="android:layout_marginBottom">@dimen/movie_detail_synopsis_margin_bottom</item>
-        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Body1</item>
+        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Subhead</item>
+        <item name="android:textSize">@dimen/abc_text_size_subhead_material</item>
+        <item name="android:fontFamily">sans-serif-light</item>
     </style>
 
 
