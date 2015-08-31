@@ -34,7 +34,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.graphics.Palette;
 import android.support.v7.widget.ShareActionProvider;
 import android.support.v7.widget.Toolbar;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -91,10 +90,10 @@ public class MovieDetailFragment extends Fragment {
     @Bind(R.id.movie_detail_text_synopsis)      TextView mMovieSynopsis;
     @Bind(R.id.movie_detail_collapsing_toolbar) CollapsingToolbarLayout mCollapsingToolbar;
     @Bind(R.id.movie_detail_trailer_container)  LinearLayout mMovieTrailerContainer;
-    @Bind(R.id.movie_detail_review_container)  LinearLayout mMovieReviewContainer;
-    @Bind(R.id.movie_detail_favorite_button) FloatingActionButton mFavoritebutton;
+    @Bind(R.id.movie_detail_review_container)   LinearLayout mMovieReviewContainer;
+    @Bind(R.id.movie_detail_favorite_button)    FloatingActionButton mFavoritebutton;
 
-    @Nullable @Bind(R.id.movie_detail_toolbar)            Toolbar mToolbar;
+    @Nullable @Bind(R.id.movie_detail_toolbar)  Toolbar mToolbar;
 
     @BindDrawable(R.drawable.no_poster)         Drawable mMovieErrorImg;
     @BindColor(R.color.transparent) int mColorTransparent;
@@ -232,11 +231,6 @@ public class MovieDetailFragment extends Fragment {
                                 TextView mMovieReviewContent = (TextView) mMovieReviewItem.findViewById(R.id.movie_review_text_content);
                                 mMovieReviewContent.setText(review.getContent());
 
-                                mMovieReviewContent.setSingleLine(false);
-                                mMovieReviewContent.setEllipsize(TextUtils.TruncateAt.END);
-                                int n = 4; // TODO: declase this value in xml for flexible UI
-                                mMovieReviewContent.setLines(n);
-
                                 mMovieReviewContainer.addView(mMovieReviewItem);
 
                             }
@@ -368,10 +362,6 @@ public class MovieDetailFragment extends Fragment {
         // Get the provider and hold onto it to set/change the share intent.
         mShareActionProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(mMenuItemShare);
 
-        // If onLoadFinished happens before this, we can go ahead and set the share intent now.
-        /*if (mForecast != null) {
-            mShareActionProvider.setShareIntent(createShareForecastIntent());
-        }*/
     }
 
     private Intent createShareTrailerIntent(String video_id) {
