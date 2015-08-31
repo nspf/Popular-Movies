@@ -72,7 +72,6 @@ public class MovieDetailFragment extends Fragment {
 
     private static final EventBus bus = EventBus.getDefault();
     public static final String MOVIE = "movie";
-    //private static final int DETAIL_LOADER = 1;
 
     private Movie mMovieDetail;
     private List<Result> mReviews;
@@ -114,7 +113,7 @@ public class MovieDetailFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        EventBus.getDefault().register(this);
+        bus.register(this);
     }
 
     @Override
@@ -190,7 +189,7 @@ public class MovieDetailFragment extends Fragment {
         mFavoritebutton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                setFavorite(mMovieDetail, true);
+                setFavorite(mMovieDetail);
             }
         });
 
@@ -285,7 +284,7 @@ public class MovieDetailFragment extends Fragment {
     }
 
 
-    public void setFavorite(Movie movie, Boolean favorite) {
+    public void setFavorite(Movie movie) {
         if(movie.isFavorite()) {
             movie.setFavorite(false);
 
@@ -334,9 +333,6 @@ public class MovieDetailFragment extends Fragment {
 
     }
 
-    /*@OnClick(R.id.movie_detail_favorite_button)
-    public void onFavoriteButtonClick(View view) {
-    }*/
 
     public void onEvent(FavoriteMovieEvent event){
         event.getValue();
@@ -344,7 +340,7 @@ public class MovieDetailFragment extends Fragment {
 
     @Override
     public void onStop() {
-        EventBus.getDefault().unregister(this);
+        bus.unregister(this);
         super.onStop();
     }
 
@@ -353,15 +349,9 @@ public class MovieDetailFragment extends Fragment {
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         inflater.inflate(R.menu.menu_movie_detail_fragment, menu);
-
-        // Retrieve the share menu item
         mMenuItemShare = menu.findItem(R.id.action_share);
-
-        // Get the provider and hold onto it to set/change the share intent.
         mShareActionProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(mMenuItemShare);
-
     }
 
     private Intent createShareTrailerIntent(String video_id) {
