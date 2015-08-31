@@ -28,13 +28,18 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.graphics.Palette;
+import android.support.v7.widget.ShareActionProvider;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -60,7 +65,6 @@ import butterknife.Bind;
 import butterknife.BindColor;
 import butterknife.BindDrawable;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 import de.greenrobot.event.EventBus;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -69,11 +73,13 @@ public class MovieDetailFragment extends Fragment {
 
     private static final EventBus bus = EventBus.getDefault();
     public static final String MOVIE = "movie";
-    private static final int DETAIL_LOADER = 1;
+    //private static final int DETAIL_LOADER = 1;
 
     private Movie mMovieDetail;
     private List<Result> mReviews;
     private List<Youtube> mTrailers;
+    private ShareActionProvider mShareActionProvider;
+    MenuItem mMenuItemShare;
 
     private View mView;
 
@@ -93,14 +99,23 @@ public class MovieDetailFragment extends Fragment {
     @BindDrawable(R.drawable.no_poster)         Drawable mMovieErrorImg;
     @BindColor(R.color.transparent) int mColorTransparent;
 
+    public MovieDetailFragment() {
+        setHasOptionsMenu(true);
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             mMovieDetail = getArguments().getParcelable(MOVIE);
-            EventBus.getDefault().register(this);
         }
 
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
     }
 
     @Override
@@ -181,6 +196,7 @@ public class MovieDetailFragment extends Fragment {
         });
 
 
+
         fetchMovieData(mMovieDetail.getMovieId().longValue());
 
     }
@@ -204,7 +220,8 @@ public class MovieDetailFragment extends Fragment {
 
                             for (final Result review : mReviews) {
 
-                                View mMovieReviewItem = mView.inflate(getActivity(), R.layout.movie_review_item, null);
+                                View mMovieReviewItem = LayoutInflater.from(getActivity()).inflate(
+                                        R.layout.movie_review_item, null);
 
                                 TextView mMovieReviewAuthor = (TextView) mMovieReviewItem.findViewById(R.id.movie_review_text_author);
                                 mMovieReviewAuthor.setText(review.getAuthor());
@@ -217,7 +234,7 @@ public class MovieDetailFragment extends Fragment {
 
                                 mMovieReviewContent.setSingleLine(false);
                                 mMovieReviewContent.setEllipsize(TextUtils.TruncateAt.END);
-                                int n = 4; // the exact number of lines you want to display
+                                int n = 4; // TODO: declase this value in xml for flexible UI
                                 mMovieReviewContent.setLines(n);
 
                                 mMovieReviewContainer.addView(mMovieReviewItem);
@@ -231,10 +248,13 @@ public class MovieDetailFragment extends Fragment {
 
                             for (final Youtube video : mTrailers) {
 
-                                View mMovieTrailerItem = mView.inflate(getActivity(), R.layout.movie_trailer_item, null);
+                                View mMovieTrailerItem = LayoutInflater.from(getActivity()).inflate(
+                                        R.layout.movie_trailer_item, null);
+
                                 mMovieTrailerItem.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View view) {
+                                        //TODO: make a share trailer intent function
                                         startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.youtube.com/watch?v=" + video.getSource())));
                                     }
                                 });
@@ -252,6 +272,12 @@ public class MovieDetailFragment extends Fragment {
                                     startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.youtube.com/watch?v=" + mTrailers.get(0).getSource())));
                                 }
                             });
+
+                            //Share trailer
+                            if (mShareActionProvider != null) {
+                                mShareActionProvider.setShareIntent(createShareTrailerIntent(mTrailers.get(0).getSource()));
+                                mMenuItemShare.setVisible(true);
+                            }
 
                         }
                     }
@@ -314,12 +340,46 @@ public class MovieDetailFragment extends Fragment {
 
     }
 
-    @OnClick(R.id.movie_detail_favorite_button)
+    /*@OnClick(R.id.movie_detail_favorite_button)
     public void onFavoriteButtonClick(View view) {
-    }
+    }*/
 
     public void onEvent(FavoriteMovieEvent event){
         event.getValue();
     }
+
+    @Override
+    public void onStop() {
+        EventBus.getDefault().unregister(this);
+        super.onStop();
+    }
+
+
+    //Share menu
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        inflater.inflate(R.menu.menu_movie_detail_fragment, menu);
+
+        // Retrieve the share menu item
+        mMenuItemShare = menu.findItem(R.id.action_share);
+
+        // Get the provider and hold onto it to set/change the share intent.
+        mShareActionProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(mMenuItemShare);
+
+        // If onLoadFinished happens before this, we can go ahead and set the share intent now.
+        /*if (mForecast != null) {
+            mShareActionProvider.setShareIntent(createShareForecastIntent());
+        }*/
+    }
+
+    private Intent createShareTrailerIntent(String video_id) {
+        Intent shareIntent = new Intent(Intent.ACTION_SEND);
+        shareIntent.setType("text/plain");
+        shareIntent.putExtra(Intent.EXTRA_TEXT, mMovieDetail.getTitle() + "\n\n" + "http://www.youtube.com/watch?v=" + video_id);
+        return shareIntent;
+    }
+
 
 }
