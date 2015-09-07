@@ -40,7 +40,7 @@ import retrofit.http.Query;
 
 public final class MoviesService {
     public static final String API_URL_BASE = "http://api.themoviedb.org/3";
-    public static final String API_KEY = "64f4f7bd4da8f94c04844bdc7faf18a8";
+    public static final String API_KEY = "PLEASE ADD YOUR API KEY HERE";
     public static final String API_KEY_PARAM = "api_key";
     private static MoviesApi sMoviesService;
 
