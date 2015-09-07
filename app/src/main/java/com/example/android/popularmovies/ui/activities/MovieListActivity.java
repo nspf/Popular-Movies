@@ -26,9 +26,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.example.android.popularmovies.MovieSelectedEvent;
 import com.example.android.popularmovies.R;
-import com.example.android.popularmovies.ui.fragments.BaseMovieListFragment;
+import com.example.android.popularmovies.data.event.MovieSelectedEvent;
 import com.example.android.popularmovies.ui.fragments.FavoriteMoviesFragment;
 import com.example.android.popularmovies.ui.fragments.MovieDetailFragment;
 import com.example.android.popularmovies.ui.fragments.MovieListFragment;
@@ -44,18 +43,18 @@ public class MovieListActivity extends AppCompatActivity {
     private final String MOST_POPULAR = "popularity.desc";
     private final String HIGHEST_RATED = "vote_average.desc";
     private final String MOST_RATED = "vote_count.desc";
+    private final String FAVORITES = "favorites";
     private final String MOVIE_LIST_FRAGMENT_TAG = "movieListFragment";
 
-    private BaseMovieListFragment mMovieListFragment;
+    private Fragment mFragment;
     private Boolean mTwoPane;
 
     private final int mMenuMostPopular = R.id.menu_most_popular;
     private final int mMenuHighestRated = R.id.menu_highest_rated;
     private final int mMenuMostRated = R.id.menu_most_rated;
-
     private final int mMenuFavorites = R.id.menu_favorites;
-
-    private static final String DETAILFRAGMENT_TAG = "DFTAG";
+    private final int mMovieDetailContainer = R.id.movie_detail_fragment_container;
+    private final int mMovieListContainer = R.id.movie_list_fragment_container;
 
     @Bind(R.id.movie_list_toolbar) Toolbar mToolbar;
 
@@ -65,26 +64,16 @@ public class MovieListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie_list);
         ButterKnife.bind(this);
-        EventBus.getDefault().register(this);
 
-
-        if (findViewById(R.id.movie_detail_fragment_container) != null) {
-            mTwoPane = true;
-        }
-        else {
-            mTwoPane = false;
-        }
-
+        mTwoPane = findViewById(mMovieDetailContainer) != null;
 
         if(mToolbar != null) {
             setSupportActionBar(mToolbar);
         }
 
         if (savedInstanceState != null) {
-            mMovieListFragment = (BaseMovieListFragment)
-                    getSupportFragmentManager().findFragmentByTag(MOVIE_LIST_FRAGMENT_TAG);
+            mFragment = getSupportFragmentManager().findFragmentByTag(MOVIE_LIST_FRAGMENT_TAG);
         }
-
         else {
             loadNewMovieListFragment();
         }
@@ -93,19 +82,36 @@ public class MovieListActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_main, menu);
+        getMenuInflater().inflate(R.menu.menu_activity_movie_list, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
+
         super.onPrepareOptionsMenu(menu);
-        MenuItem item = menu.findItem(getMovieListOrder());
-        item.setChecked(true);
-        mToolbar.setSubtitle(item.getTitle());
+        switch(getMovieListOrder()) {
+
+            case MOST_POPULAR:
+                setMovieSortMode(menu.findItem(mMenuMostPopular));
+                break;
+
+            case HIGHEST_RATED:
+                setMovieSortMode(menu.findItem(mMenuHighestRated));
+                break;
+
+            case MOST_RATED:
+                setMovieSortMode(menu.findItem(mMenuMostRated));
+                break;
+
+            case FAVORITES:
+                setMovieSortMode(menu.findItem(mMenuFavorites));
+                break;
+        }
         return true;
     }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -113,60 +119,66 @@ public class MovieListActivity extends AppCompatActivity {
         switch(item.getItemId()){
 
             case mMenuMostPopular:
+                setMovieListOrder(MOST_POPULAR);
+                break;
+
             case mMenuHighestRated:
+                setMovieListOrder(HIGHEST_RATED);
+                break;
+
             case mMenuMostRated:
+                setMovieListOrder(MOST_RATED);
+                break;
+
             case mMenuFavorites:
-                item.setChecked(!item.isChecked());
-                setMovieListOrder(item.getItemId());
-                mToolbar.setSubtitle(item.getTitle());
-                return  true;
+                setMovieListOrder(FAVORITES);
+                break;
+
             default:
                 return super.onOptionsItemSelected(item);
         }
+
+        setMovieSortMode(item);
+        return  true;
+    }
+
+
+    public void setMovieSortMode(MenuItem item) {
+        item.setChecked(!item.isChecked());
+        mToolbar.setSubtitle(item.getTitle());
     }
 
 
     // Movie list order is stored in Preferences.
-    public void setMovieListOrder(int movieListOrder) {
+    public void setMovieListOrder(String movieListOrder) {
         getPreferences(Context.MODE_PRIVATE)
                 .edit()
-                .putInt(SORT_BY, movieListOrder)
+                .putString(SORT_BY, movieListOrder)
                 .commit();
 
         loadNewMovieListFragment();
     }
 
 
-    public Integer getMovieListOrder() {
+    public String getMovieListOrder() {
         return getPreferences(Context.MODE_PRIVATE)
-                .getInt(SORT_BY, mMenuMostPopular);
+                .getString(SORT_BY, MOST_POPULAR);
     }
 
 
     public void loadNewMovieListFragment() {
 
         switch(getMovieListOrder()) {
-            case mMenuFavorites:
-                loadFragment(new FavoriteMoviesFragment());
+            case FAVORITES:
+                mFragment = new FavoriteMoviesFragment();
+                loadFragment(mFragment, mMovieListContainer, MOVIE_LIST_FRAGMENT_TAG);
                 break;
-            case mMenuMostPopular:
-                sortedMovieListFragment(MOST_POPULAR);
-                break;
-            case mMenuHighestRated:
-                sortedMovieListFragment(HIGHEST_RATED);
-                break;
-            case mMenuMostRated:
-                sortedMovieListFragment(MOST_RATED);
+
+            default:
+                sortedMovieListFragment(getMovieListOrder());
                 break;
 
         }
-        /*if (getMovieListOrder() == mMenuFavorites) {
-            loadFragment(new FavoriteMoviesFragment());
-        } else {
-            sortedMovieListFragment(getMovieListOrder());
-
-        }*/
-
     }
 
     public void sortedMovieListFragment(String sortMode) {
@@ -174,43 +186,54 @@ public class MovieListActivity extends AppCompatActivity {
         Bundle arguments = new Bundle();
         arguments.putString(MovieListFragment.SORT_BY, sortMode);
 
-        mMovieListFragment = new MovieListFragment();
-        mMovieListFragment.setArguments(arguments);
-        loadFragment(mMovieListFragment);
+        mFragment = new MovieListFragment();
+        mFragment.setArguments(arguments);
+        loadFragment(mFragment, mMovieListContainer, MOVIE_LIST_FRAGMENT_TAG);
 
     }
 
-    public void loadFragment(Fragment fragment) {
 
-        getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.movie_list_fragment_container, fragment, MOVIE_LIST_FRAGMENT_TAG)
-                .commit();
-    }
-
-
+    @SuppressWarnings("unused")
     public void onEvent(MovieSelectedEvent event) {
 
         if(mTwoPane) {
 
             Bundle arguments = new Bundle();
-            arguments.putParcelable(MovieDetailFragment.MOVIE, event.getValue());
+            arguments.putParcelable(MovieDetailFragment.MOVIE, event.getMovie());
 
             MovieDetailFragment fragment = new MovieDetailFragment();
-            fragment.setArguments(arguments);
 
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.movie_detail_fragment_container, fragment, DETAILFRAGMENT_TAG)
-                    .commit();
+            fragment.setArguments(arguments);
+            loadFragment(fragment, mMovieDetailContainer, MovieDetailFragment.MOVIE);
 
         }
 
         else {
             Intent intent = new Intent(this, MovieDetailActivity.class);
-                    intent.putExtra(MovieDetailFragment.MOVIE, event.getValue());
+                    intent.putExtra(MovieDetailFragment.MOVIE, event.getMovie());
                     startActivity(intent);
         }
     }
 
-}
 
+    public void loadFragment(Fragment fragment, int container, String tag) {
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(container, fragment, tag)
+                .commit();
+    }
+
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onStop() {
+        EventBus.getDefault().unregister(this);
+        super.onStop();
+    }
+
+}

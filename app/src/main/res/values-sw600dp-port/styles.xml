@@ -14,10 +14,8 @@
   limitations under the License.
   -->
 
-<menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    tools:context="com.example.android.popularmovies.ui.activities.MovieDetailActivity">
-    <item android:id="@+id/action_settings" android:title="@string/menu.action_settings"
-        android:orderInCategory="100" app:showAsAction="never" />
-</menu>
+<resources>
+    <style name ="MovieDetailToolbar">
+        <item name="android:visibility">gone</item>
+    </style>
+</resources>

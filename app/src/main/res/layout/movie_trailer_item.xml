@@ -1,16 +1,15 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
     style="@style/MovieTrailerItem">
 
     <ImageView
         android:id="@id/movie_trailer_image_play"
-        android:contentDescription="@string/movie.trailer_play_button"
+        android:contentDescription="@string/movie_trailer_play_button"
         style="@style/MovieTrailerPlayButton"
         />
 
-        <TextView
-            android:id="@id/movie_trailer_text_title"
-            style="@style/MovieTrailerTitle"/>
+    <TextView
+        android:id="@id/movie_trailer_text_title"
+        style="@style/MovieTrailerTitle"/>
 
 </RelativeLayout>

@@ -20,6 +20,7 @@ import android.database.Cursor;
 import android.support.v4.content.Loader;
 import android.view.View;
 
+import com.example.android.popularmovies.R;
 import com.example.android.popularmovies.data.model.Movie;
 
 import org.chalup.microorm.MicroOrm;
@@ -27,9 +28,14 @@ import org.chalup.microorm.MicroOrm;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindString;
+
 public class FavoriteMoviesFragment extends BaseMovieListFragment{
 
-    MicroOrm mOrm = new MicroOrm();
+    final MicroOrm mOrm = new MicroOrm();
+    @BindString(R.string.no_favorite_movies_text) String mNoFavoritesText;
+    @BindString(R.string.no_favorite_movies_desc) String mNoFavoritesDesc;
+
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
@@ -41,7 +47,8 @@ public class FavoriteMoviesFragment extends BaseMovieListFragment{
 
         else {
             mMovieList.clear();
-            mEmptyView.setMessageText("No favorite movies");
+            mEmptyView.setMessageText(mNoFavoritesText);
+            mEmptyView.setMessageDescription(mNoFavoritesDesc);
             mEmptyView.setVisibility(View.VISIBLE);
         }
 

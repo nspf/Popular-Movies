@@ -27,7 +27,6 @@ import com.google.gson.annotations.SerializedName;
 import org.chalup.microorm.annotations.Column;
 
 
-
 public class Movie implements Parcelable{
 
     /*
@@ -108,11 +107,11 @@ public class Movie implements Parcelable{
     public Boolean favorite = false;
 
     public static final String BASE_IMAGE_URL = "http://image.tmdb.org/t/p/";
-    public static final String POSTER_185 = "w185";
-    public static final String BACKDROP_300 = "w300";
+    public static final String POSTER_URI = "w300";
+    public static final String BACKDROP_URI = "w780";
 
     public Movie() {
-        super();    // required by ActiveAndroid
+        super();
     }
 
 
@@ -131,8 +130,6 @@ public class Movie implements Parcelable{
         voteAverage = in.readDouble();
         voteCount = in.readInt();
         favorite = in.readByte() !=0;
-
-
     }
 
     @Override
@@ -281,24 +278,22 @@ public class Movie implements Parcelable{
         this.voteCount = voteCount;
     }
 
-    //
 
     public String getYearFromReleaseDate() {
+
         if(getReleaseDate() != null){
             String[] parts = this.getReleaseDate().split("-");
             return parts[0];
         }
-
-        else return "";
-
+        return "";
     }
 
     public String getFullPosterPath() {
-        return BASE_IMAGE_URL + POSTER_185 + getPosterPath();
+        return BASE_IMAGE_URL + POSTER_URI + getPosterPath();
     }
 
     public String getFullBackdropPath() {
-        return BASE_IMAGE_URL + BACKDROP_300 + getBackdropPath();
+        return BASE_IMAGE_URL + BACKDROP_URI + getBackdropPath();
     }
 
     public Boolean isFavorite() {

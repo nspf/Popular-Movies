@@ -24,7 +24,7 @@
         <item name="colorPrimary">@color/primary</item>
         <item name="colorPrimaryDark">@color/primary_dark</item>
         <item name="colorAccent">@color/accent</item>
-        <item name="android:windowBackground">@color/background</item>
+        <item name="photoItemForeground">?android:selectableItemBackground</item>
     </style>
 
     <style name="Theme.PopMovies" parent="Theme.PopMovies.Base" />
@@ -65,13 +65,13 @@
 
 
     <style name ="ImageMovieListPoster" parent="Match">
-        <item name="android:minHeight">@dimen/movie_poster_min_height</item>
         <item name="android:scaleType">centerCrop</item>
-        <item name="android:contentDescription">@string/movie.list.item_movie_poster</item>
+        <item name="android:contentDescription">@string/movie_list_item_movie_poster</item>
+        <item name="android:minHeight">278dp</item>
+
     </style>
 
     <style name ="MovieListItemFavoriteButton" parent="Wrap">
-        <item name="android:contentDescription">@string/movie.list.item_movie_favorite_button</item>
         <item name="android:background">@drawable/selector_favorite_button</item>
         <item name="android:tint">@android:color/white</item>
     </style>
@@ -82,42 +82,90 @@
         <item name="android:fitsSystemWindows">true</item>
         <item name="android:adjustViewBounds">true</item>
         <item name="android:scaleType">centerCrop</item>
+        <item name="android:alpha">0.8</item>
+    </style>
+
+    <style name ="ImageMovieDetailBackdropPlay" parent="Wrap">
+        <item name="android:fitsSystemWindows">true</item>
+        <item name="android:adjustViewBounds">true</item>
+        <item name="android:scaleType">centerCrop</item>
+        <item name="android:visibility">gone</item>
+        <item name="android:src">@drawable/ic_play_white_48dp</item>
+        <item name="android:background">@drawable/play_button_circle_bg</item>
+        <item name="android:padding">@dimen/spacing_small</item>
+        <item name="android:layout_gravity">center</item>
     </style>
 
     <style name ="ImageMovieDetailPoster" parent="Wrap">
-        <item name="android:layout_margin">@dimen/spacing_large</item>
-        <item name="android:layout_alignParentLeft">true</item>
+        <item name="android:layout_width">@dimen/movie_detail_poster_width</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:scaleType">centerCrop</item>
+    </style>
+
+    <style name ="MovieDetailToolbar">
     </style>
 
     <style name ="TextMovieDetailTitle" parent="Wrap">
-        <item name="android:layout_marginRight">@dimen/spacing_large</item>
-        <item name="android:layout_marginTop">@dimen/spacing_large</item>
+         <item name="android:textAppearance">@style/TextAppearance.AppCompat.Title</item>
+        <item name="android:fontFamily">sans-serif-light</item>
+    </style>
+
+    <style name ="TextMovieDetailGenres" parent="Wrap">
+        <item name="android:layout_below">@id/movie_detail_text_meta</item>
         <item name="android:layout_toRightOf">@id/movie_detail_image_poster</item>
-        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Headline</item>
+        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Body1</item>
+        <item name="android:fontFamily">sans-serif-light</item>
+        <item name="android:layout_marginTop">@dimen/spacing_small</item>
     </style>
 
     <style name ="TextMovieDetailDate" parent="Wrap">
         <item name="android:layout_below">@id/movie_detail_text_title</item>
         <item name="android:layout_toRightOf">@id/movie_detail_image_poster</item>
-        <item name="android:singleLine">false</item>
-        <item name="android:scrollHorizontally">false</item>
-        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Subhead</item>
+        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Body1</item>
+        <item name="android:fontFamily">sans-serif-light</item>
+    </style>
+
+    <style name ="TextMovieDetailDuration" parent="Wrap">
+        <item name="android:layout_below">@id/movie_detail_text_title</item>
+        <item name="android:layout_toRightOf">@id/movie_detail_text_date</item>
+        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Body1</item>
+        <item name="android:fontFamily">sans-serif-light</item>
     </style>
 
     <style name ="TextMovieDetailRating" parent="Wrap">
-        <item name="android:layout_below">@id/movie_detail_text_date</item>
-        <item name="android:layout_toRightOf">@id/movie_detail_image_poster</item>
+        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Display2</item>
+        <item name="android:layout_marginTop">@dimen/spacing_large</item>
+        <item name="android:fontFamily">sans-serif-light</item>
+        <item name="android:layout_alignParentBottom">true</item>
+    </style>
+
+    <style name ="TextMovieDetailVoteCount" parent="Wrap">
         <item name="android:textAppearance">@style/TextAppearance.AppCompat.Caption</item>
+        <item name="android:layout_marginTop">@dimen/spacing_medium</item>
+        <item name="android:layout_marginBottom">@dimen/spacing_medium</item>
+        <item name="android:drawablePadding">@dimen/spacing_xsmall</item>
+        <item name="android:drawableRight">@drawable/ic_account_grey600_18dp</item>
+    </style>
+
+    <style name ="TextMovieDetailTagline" parent="Fill.Width">
+        <item name="android:layout_below">@id/movie_detail_image_poster</item>
+        <item name="android:layout_marginBottom">@dimen/spacing_large</item>
+        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Subhead</item>
+        <item name="android:textSize">@dimen/abc_text_size_subhead_material</item>
     </style>
 
     <style name ="TextMovieDetailSynopsis" parent="Fill.Width">
-        <item name="android:layout_below">@id/movie_detail_image_poster</item>
-        <item name="android:layout_marginLeft">@dimen/spacing_large</item>
-        <item name="android:layout_marginRight">@dimen/spacing_large</item>
+        <item name="android:layout_below">@id/movie_detail_text_tagline</item>
         <item name="android:layout_marginBottom">@dimen/movie_detail_synopsis_margin_bottom</item>
         <item name="android:textAppearance">@style/TextAppearance.AppCompat.Subhead</item>
-        <item name="android:textSize">@dimen/abc_text_size_subhead_material</item>
         <item name="android:fontFamily">sans-serif-light</item>
+    </style>
+
+    <style name ="MovieDetailFabButton" parent="Wrap">
+        <item name="fabSize">mini</item>
+        <item name="android:clickable">true</item>
+        <item name="android:tint">@android:color/white</item>
+        <item name="android:src">@drawable/ic_bookmark_outline_white_24dp</item>
     </style>
 
 
@@ -126,22 +174,25 @@
     <style name ="MovieDetailTrailerContainer" parent="Fill.Width">
         <item name="android:orientation">vertical</item>
         <item name="android:layout_below">@id/movie_detail_review_container</item>
-        <item name="android:layout_margin">@dimen/spacing_large</item>
+        <item name="android:layout_marginBottom">@dimen/spacing_large</item>
+        <item name="android:layout_marginTop">@dimen/spacing_large</item>
+
     </style>
 
-    <style name ="MovieTrailerItem" parent="Match">
-        <item name="android:layout_height">@dimen/movie_trailer_item_height</item>
+    <style name ="MovieTrailerItem" parent="Fill.Width">
+        <item name="android:layout_marginBottom">@dimen/spacing_xlarge</item>
+        <item name="android:layout_marginTop">@dimen/spacing_large</item>
     </style>
 
     <style name ="MovieTrailerPlayButton" parent="Wrap">
-        <item name="android:src">@drawable/ic_play_circle_outline_grey600_36dp</item>
-        <item name="android:tint">@color/accent</item>
+        <item name="android:src">@drawable/ic_play_white_36dp</item>
+        <item name="android:background">@drawable/play_trailer_circle_bg</item>
         <item name="android:layout_alignParentLeft">true</item>
-        <item name="android:paddingBottom">@dimen/spacing_large</item>
-        <item name="android:paddingTop">@dimen/spacing_large</item>
-        <item name="android:paddingRight">@dimen/spacing_large</item>
-
-
+        <item name="android:layout_marginRight">@dimen/spacing_large</item>
+        <item name="android:layout_marginBottom">@dimen/spacing_large</item>
+        <item name="android:layout_marginTop">@dimen/spacing_large</item>
+        <item name="android:layout_centerVertical">true</item>
+        <item name="android:elevation">4dp</item>
     </style>
 
     <style name ="MovieTrailerTitle" parent="Match">
@@ -150,7 +201,7 @@
         <item name="android:singleLine">true</item>
         <item name="android:gravity">center_vertical</item>
         <item name="android:layout_centerVertical">true</item>
-        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Subhead</item>
+        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Body2</item>
     </style>
 
     <!-- Movie review -->
@@ -158,27 +209,36 @@
     <style name ="MovieDetailReviewContainer" parent="Fill.Width">
         <item name="android:orientation">vertical</item>
         <item name="android:layout_below">@id/movie_detail_text_synopsis</item>
-        <item name="android:layout_margin">@dimen/spacing_large</item>
+        <item name="android:paddingTop">@dimen/spacing_large</item>
+        <item name="android:paddingBottom">@dimen/spacing_large</item>
     </style>
 
     <style name ="MovieReviewItem" parent="Fill.Width">
+        <item name="android:layout_marginBottom">@dimen/spacing_xlarge</item>
+        <item name="android:layout_marginTop">@dimen/spacing_xlarge</item>
     </style>
 
-    <style name ="MovieReviewAuthor" parent="Match">
+    <style name ="MovieReviewAuthor" parent="Fill.Width">
         <item name="android:singleLine">true</item>
-        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Subhead</item>
+        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Body2</item>
     </style>
 
-    <style name ="MovieReviewUrl" parent="Match">
+    <style name ="MovieReviewUrl" parent="Fill.Width">
         <item name="android:textAppearance">@style/TextAppearance.AppCompat.Caption</item>
+        <item name="android:fontFamily">sans-serif-light</item>
+        <item name="android:linksClickable">true</item>
     </style>
 
-    <style name ="MovieReviewContent" parent="Match">
-        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Subhead</item>
+    <style name ="MovieReviewContent" parent="Fill.Width">
+        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Body1</item>
+        <item name="android:fontFamily">sans-serif-light</item>
+        <item name="android:layout_marginBottom">@dimen/spacing_large</item>
+        <item name="android:layout_marginTop">@dimen/spacing_medium</item>
     </style>
+
+
 
     <!-- Generic styles -->
-
 
     <style name ="Match">
         <item name="android:layout_width">match_parent</item>
@@ -199,7 +259,7 @@
 
     <style name="Fill.Height" parent="@style/Fill">
         <item name="android:layout_width">wrap_content</item>
-        </style>
+    </style>
 
     <style name="Fill.Width" parent="@style/Fill">
         <item name="android:layout_height">wrap_content</item>

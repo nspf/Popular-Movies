@@ -8,8 +8,7 @@
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/Theme.PopMovies"
-        android:name=".PopMoviesApplication">
+        android:theme="@style/Theme.PopMovies">
 
         <activity
             android:name=".ui.activities.MovieListActivity"
@@ -22,7 +21,7 @@
         </activity>
         <activity
             android:name=".ui.activities.MovieDetailActivity"
-            android:label="@string/movie.detail.activity.title"
+            android:label="@string/movie_detail_activity_title"
             android:parentActivityName=".ui.activities.MovieListActivity">
             <!-- The meta-data element is needed for versions lower than 4.1 -->
             <meta-data

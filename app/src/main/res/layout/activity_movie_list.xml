@@ -14,19 +14,18 @@
   limitations under the License.
   -->
 
-<RelativeLayout
-xmlns:android="http://schemas.android.com/apk/res/android"
-xmlns:tools="http://schemas.android.com/tools"
-tools:context=".MainActivity"
-tools:ignore="MergeRootFrame"
-style="@style/Match">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".MainActivity"
+    tools:ignore="MergeRootFrame"
+    style="@style/Match">
 
 <android.support.v7.widget.Toolbar
     android:id="@id/movie_list_toolbar"
     android:layout_alignParentTop="true"
     android:background="?attr/colorPrimary"
-    android:minHeight="?attr/actionBarSize"
-    style="@style/Fill.Width"/>
+    android:layout_height="@dimen/bar_height"
+    style="@style/Fill.Width" />
 
     <FrameLayout
         android:id="@id/movie_list_fragment_container"

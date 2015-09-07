@@ -21,16 +21,18 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.support.v7.graphics.Palette;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.android.popularmovies.MovieSelectedEvent;
 import com.example.android.popularmovies.R;
+import com.example.android.popularmovies.data.event.FavoriteMovieEvent;
+import com.example.android.popularmovies.data.event.MovieSelectedEvent;
 import com.example.android.popularmovies.data.model.Movie;
+import com.example.android.popularmovies.data.model.MovieHelper;
+import com.example.android.popularmovies.ui.widgets.ImageViewKeepRatio;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
@@ -38,6 +40,7 @@ import java.util.List;
 
 import butterknife.Bind;
 import butterknife.BindColor;
+import butterknife.BindDimen;
 import butterknife.ButterKnife;
 import de.greenrobot.event.EventBus;
 
@@ -45,17 +48,17 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.Movi
 
     private final Context mContext;
     private final List<Movie> mMovieList;
-    int mitemSelected;
+    private final MovieHelper mMovieHelper;
+    private Boolean isFavorite;
+    private int mitemSelected;
     private static final EventBus bus = EventBus.getDefault();
 
     public MovieListAdapter(Context context, List<Movie> movieList) {
         this.mContext = context;
         this.mMovieList = movieList;
+        this.mMovieHelper = new MovieHelper(context);
         setHasStableIds(true);
-
-
-        EventBus.getDefault().register(this);
-
+        bus.register(this);
     }
 
     public long getItemId(int position) {
@@ -64,7 +67,6 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.Movi
 
     @Override
     public int getItemCount() {
-        //return mMovieList.size();
         return mMovieList == null ? 0 : mMovieList.size();
     }
 
@@ -85,9 +87,11 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.Movi
         holder.mMovieReleaseDate.setTextColor(holder.mColorWhite);
         holder.mMovieFavoriteButton.setSelected(movie.isFavorite());
 
-
         Picasso.with(mContext)
+
                 .load(movie.getFullPosterPath())
+                .resize(holder.mMoviePosterWidth,holder.mMoviePosterHeight)
+                .placeholder(R.drawable.no_poster)
                 .error(R.drawable.no_poster)
                 .into(holder.mMoviePoster, new Callback() {
 
@@ -112,7 +116,6 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.Movi
                                     holder.mMovieFooter.setBackgroundColor(vibrant.getRgb());
                                     holder.mMovieTitle.setTextColor(vibrant.getTitleTextColor());
                                     holder.mMovieReleaseDate.setTextColor(vibrant.getBodyTextColor());
-
                                 }
                             }
                         });
@@ -136,14 +139,16 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.Movi
     public final class MovieHolder extends RecyclerView.ViewHolder {
 
         @Bind(R.id.movie_item_footer) View mMovieFooter;
-        @Bind(R.id.movie_item_image_poster) ImageView mMoviePoster;
+        @Bind(R.id.movie_item_image_poster) ImageViewKeepRatio mMoviePoster;
         @Bind(R.id.movie_item_text_title) TextView mMovieTitle;
         @Bind(R.id.movie_item_text_release_date) TextView mMovieReleaseDate;
         @Bind(R.id.movie_item_image_favorite_button) ImageView mMovieFavoriteButton;
 
-
         @BindColor(R.color.transparent) int mColorTransparent;
         @BindColor(android.R.color.white) int mColorWhite;
+
+        @BindDimen(R.dimen.movie_list_poster_width) int mMoviePosterWidth;
+        @BindDimen(R.dimen.movie_list_poster_height) int mMoviePosterHeight;
 
         public MovieHolder(View vi) {
             super(vi);
@@ -152,18 +157,18 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.Movi
             vi.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Log.i("movie a enviar",mMovieList.get(getAdapterPosition()).getTitle());
-
-
-                    /*Intent intent = new Intent(v.getContext(), MovieDetailActivity.class);
-                    intent.putExtra(MovieDetailFragment.MOVIE, mMovieList.get(getAdapterPosition()));
-                    mContext.startActivity(intent);*/
-
                     bus.post(new MovieSelectedEvent(mMovieList.get(getAdapterPosition())));
-
-
-
                     mitemSelected = getAdapterPosition();
+                }
+            });
+
+
+            mMovieFavoriteButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Boolean result = mMovieHelper.setFavorite(mMovieList.get(getAdapterPosition()));
+                    mMovieList.get(getAdapterPosition()).setFavorite(result);
+                    notifyItemChanged(getAdapterPosition());
                 }
             });
 
@@ -181,13 +186,8 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.Movi
     }
 
 
-    ///TEST
-    /*public Movie getItem(int position) {
-        return mMovieList.get(position);
-    }*/
-
-    public void setItemFavorite(int position, boolean isFavorite) {
-        mMovieList.get(position).setFavorite(isFavorite);
+    public void setItemFavorite(int position) {
+        mMovieList.get(position).setFavorite(!mMovieList.get(position).isFavorite());
         notifyItemChanged(position);
     }
 
@@ -195,14 +195,14 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.Movi
         return mitemSelected;
     }
 
-    /*public void removeMovie(int position) {
-        mMovieList.remove(position);
-        notifyDataSetChanged();
-        notifyItemRemoved(position);
-    }*/
 
+    @SuppressWarnings("unused")
     public void onEvent(MovieSelectedEvent event) {
 
+    }
+
+    @SuppressWarnings("unused")
+    public void onEvent(FavoriteMovieEvent event) {
     }
 
  }

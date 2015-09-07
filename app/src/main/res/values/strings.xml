@@ -22,30 +22,44 @@
 
 
     <!-- Menus -->
-    <string name="menu.sort_by">Sort by</string>
-    <string name="menu.most_popular">Most popular</string>
-    <string name="menu.most_rated">Most rated</string>
-    <string name="menu.highest_rated">Highest rated</string>
-    <string name="menu.favorites">Favorites</string>
-    <string name="menu.action_settings">Settings</string>
+    <string name="menu_sort_by">Sort by</string>
+    <string name="menu_most_popular">Most popular</string>
+    <string name="menu_most_rated">Most rated</string>
+    <string name="menu_highest_rated">Highest rated</string>
+    <string name="menu_favorites">Favorites</string>
+    <string name="menu_action_open_in_browser">Open in browser</string>
+    <string name="menu_action_share">Share trailer</string>
+
 
     <!-- Movie list -->
-    <string name="movie.list.item_movie_poster">Movie poster</string>
-    <string name="movie.list.item_movie_favorite_button">Favorite movie</string>
+    <string name="movie_list_item_movie_poster">Movie poster</string>
 
 
     <!-- Movie detail -->
-    <string name="movie.detail.image_backdrop">Movie backdrop</string>
-    <string name="movie.detail.image_poster">Movie poster</string>
-    <string name="movie.detail.activity.title">MovieDetailActivity</string>
+    <string name="movie_detail_image_backdrop">Movie backdrop</string>
+    <string name="movie_detail_image_backdrop_play">Play trailer</string>
+    <string name="movie_detail_image_poster">Movie poster</string>
+    <string name="movie_detail_minutes"> minutes</string>
+    <string name="movie_detail_activity_title">MovieDetailActivity</string>
 
     <!-- Movie trailer -->
-    <string name="movie.trailer_play_button">Play trailer video</string>
+    <string name="movie_trailer_play_button">Play trailer video</string>
 
     <!-- Empty state view icon -->
-    <string name="widget.empty_state_view_icon_description">Empty state view icon</string>
+    <string name="widget_empty_state_view_icon_description">Empty state view icon</string>
 
     <!-- Network eror message -->
-    <string name="error.network">Unable to fetch the movies.\nCheck your Internet connection.</string>
+    <string name="error_network_text">No connection</string>
+    <string name="error_network_desc">Check your Internet connection.</string>
+
+
+    <!-- No favorites  - empty state -->
+    <string name="no_favorite_movies_text">No favorite movies</string>
+    <string name="no_favorite_movies_desc">What\'s your favorite movie?</string>
+
+    <!-- No movie selected  - empty state -->
+    <string name="no_movie_selected_text">No movie selected</string>
+    <string name="no_movie_selected_desc">Select a movie from the list</string>
+
 
 </resources>

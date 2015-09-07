@@ -16,11 +16,8 @@
 
 package com.example.android.popularmovies.data.api;
 
-import android.util.Log;
-
 import com.example.android.popularmovies.data.model.Movie;
 import com.example.android.popularmovies.data.model.MovieData;
-import com.example.android.popularmovies.data.model.Video;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.squareup.okhttp.Cache;
@@ -48,19 +45,12 @@ public final class MoviesService {
     private static MoviesApi sMoviesService;
 
     public interface MoviesApi {
-        @GET("/discover/movie")
+
+        @GET("/discover/movie?vote_count.gte=50")
         void getMovieList(
-                @Query("sort_by") String param1,
-                @Query("page") int param2,
-                //Callback<MovieResults> cb);
+                @Query("sort_by") String sort,
+                @Query("page") int page,
                 Callback<List<Movie>> cb);
-
-
-
-                @GET("/movie/{id}/videos")
-        void getMovieTrailers(
-                @Path("id") int id,
-                Callback<Video.Response> cb);
 
         @GET("/movie/{id}?append_to_response=trailers,reviews")
         void getMovieData(
@@ -72,25 +62,20 @@ public final class MoviesService {
 
     public static MoviesApi getMoviesApiClient() {
 
-        Type listType = new TypeToken<List<Movie>>() {
-        }.getType();
-
-
-        //Setup OkHttp
         File httpCacheDirectory = new File(System.getProperty("java.io.tmpdir"), UUID.randomUUID().toString());
-
+        Type listType = new TypeToken<List<Movie>>() {}.getType();
         Cache cache = null;
+
         try {
             cache = new Cache(httpCacheDirectory, 10 * 1024 * 1024);
         } catch (Exception e) {
-            Log.e("OKHttp", "Could not create http cache", e);
+            e.printStackTrace();
         }
 
         OkHttpClient okHttpClient = new OkHttpClient();
         if (cache != null) {
             okHttpClient.setCache(cache);
         }
-
 
 
         if (sMoviesService == null) {
@@ -113,5 +98,4 @@ public final class MoviesService {
 
         return sMoviesService;
     }
-
 }

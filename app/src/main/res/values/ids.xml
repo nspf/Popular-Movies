@@ -35,19 +35,24 @@
     <item name="movie_item_image_favorite_button" type="id"/>
 
 
-
-
     <!-- Movie Detail -->
     <item name="movie_detail_fragment_container" type="id"/>
     <item name="movie_detail_fragment_container_empty" type="id"/>
     <item name="movie_detail_appbar" type="id"/>
     <item name="movie_detail_collapsing_toolbar" type="id"/>
     <item name="movie_detail_image_backdrop" type="id"/>
+    <item name="movie_detail_image_backdrop_play" type="id"/>
     <item name="movie_detail_toolbar" type="id"/>
     <item name="movie_detail_image_poster" type="id"/>
     <item name="movie_detail_text_title" type="id"/>
     <item name="movie_detail_text_date" type="id"/>
+    <item name="movie_detail_text_meta" type="id"/>
+    <item name="movie_detail_text_genres" type="id"/>
+    <item name="movie_detail_text_duration" type="id"/>
     <item name="movie_detail_text_rating" type="id"/>
+    <item name="movie_detail_rating" type="id"/>
+    <item name="movie_detail_text_votecount" type="id"/>
+    <item name="movie_detail_text_tagline" type="id"/>
     <item name="movie_detail_text_synopsis" type="id"/>
     <item name="movie_detail_trailer_container" type="id"/>
     <item name="movie_detail_review_container" type="id"/>
@@ -62,11 +67,13 @@
     <item name="movie_review_text_author" type="id"/>
     <item name="movie_review_text_url" type="id"/>
     <item name="movie_review_text_content" type="id"/>
+    <item name="movie_review_image_avatar" type="id"/>
 
 
     <!-- Empty state view widget -->
     <item name="widget_empty_state_view_container" type="id"/>
     <item name="widget_empty_state_view_text" type="id"/>
+    <item name="widget_empty_state_view_description" type="id"/>
     <item name="widget_empty_state_view_icon" type="id"/>
 
 </resources>

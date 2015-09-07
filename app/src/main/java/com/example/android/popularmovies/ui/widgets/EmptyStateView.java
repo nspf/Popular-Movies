@@ -1,3 +1,19 @@
+/*
+ * Copyright 2015 Nicolas Pintos
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package com.example.android.popularmovies.ui.widgets;
 
 import android.content.Context;
@@ -18,6 +34,7 @@ import butterknife.ButterKnife;
 public class EmptyStateView extends LinearLayout {
 
     @Bind(R.id.widget_empty_state_view_text) TextView mMessageText;
+    @Bind(R.id.widget_empty_state_view_description) TextView mMessageDescription;
     @Bind(R.id.widget_empty_state_view_icon) ImageView mMessageIcon;
 
 
@@ -38,22 +55,26 @@ public class EmptyStateView extends LinearLayout {
         TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.EmptyStateView, defStyle, 0);
 
         String text = a.getString(R.styleable.EmptyStateView_messageText);
+        String description = a.getString(R.styleable.EmptyStateView_messageDescription);
         Drawable image = a.getDrawable(R.styleable.EmptyStateView_messageIcon);
 
         mMessageText.setText(text);
+        mMessageDescription.setText(description);
         mMessageIcon.setImageDrawable(image);
 
         a.recycle();
     }
 
-    public EmptyStateView setMessageText(CharSequence text) {
+    public void setMessageText(CharSequence text) {
         mMessageText.setText(text);
-        return this;
     }
 
-    public EmptyStateView setMessageIcon(Drawable drawable) {
+    public void setMessageDescription(CharSequence text) {
+        mMessageDescription.setText(text);
+    }
+
+    public void setMessageIcon(Drawable drawable) {
         mMessageIcon.setImageDrawable(drawable);
-        return this;
     }
 
 }

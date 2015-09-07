@@ -19,13 +19,13 @@ package com.example.android.popularmovies.ui.fragments;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.content.Loader;
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Toast;
 
 import com.example.android.popularmovies.data.api.MoviesService;
 import com.example.android.popularmovies.data.model.Movie;
 import com.example.android.popularmovies.data.provider.movie.MovieColumns;
+import com.example.android.popularmovies.ui.listeners.EndlessRecyclerOnScrollListener;
 
 import java.net.SocketTimeoutException;
 import java.util.ArrayList;
@@ -40,11 +40,8 @@ public class MovieListFragment extends BaseMovieListFragment{
 
     private ArrayList<Integer> mFavoriteMovieListIds;
     private String mMovieListOrder;
-    private boolean mLoading = false;
     private boolean mFirstTime = true;
-
     public static final String SORT_BY = "sort_by";
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -60,22 +57,11 @@ public class MovieListFragment extends BaseMovieListFragment{
     @Override
     public void initRecyclerView() {
         super.initRecyclerView();
-        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-
+        mRecyclerView.addOnScrollListener(new EndlessRecyclerOnScrollListener(mGridLayoutManager) {
             @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-
-                int totalItemCount = mGridLayoutManager.getItemCount();
-                int lastVisibleItem = mGridLayoutManager.findLastVisibleItemPosition();
-
-                if (totalItemCount > 1) {
-
-                    if ((lastVisibleItem >= totalItemCount - 1) && (!mLoading)) {
-                        fetchMovieList(mMovieListOrder, mMovieListPage);
-                    }
-                }
+            public void onLoadMore(int page) {
+                fetchMovieList(mMovieListOrder, page);
             }
-
         });
 
     }
@@ -92,7 +78,6 @@ public class MovieListFragment extends BaseMovieListFragment{
     }
 
     private void fetchMovieList(String order, int page) {
-        mLoading = true;
         MoviesService.
                 getMoviesApiClient().
                 getMovieList(order, page
@@ -101,13 +86,12 @@ public class MovieListFragment extends BaseMovieListFragment{
                     public void success(List<Movie> movies, Response response) {
 
                         for (Movie movie : movies) {
-                            if (mFavoriteMovieListIds.contains(movie.getMovieId())) {
+                            if (mFavoriteMovieListIds.size() > 0 && mFavoriteMovieListIds.contains(movie.getMovieId())) {
                                 movie.setFavorite(true);
                             }
                         }
 
                         mMovieListAdapter.add(movies);
-                        mLoading = false;
                         mMovieListPage++;
 
                     }
@@ -115,16 +99,14 @@ public class MovieListFragment extends BaseMovieListFragment{
                     @Override public void failure(RetrofitError error) {
                         if (error.getKind() == RetrofitError.Kind.NETWORK) {
                             if (error.getCause() instanceof SocketTimeoutException) {
-                                Toast.makeText(getActivity(), error.toString() + "socketTimeout", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getActivity(), mNetworkError, Toast.LENGTH_SHORT).show();
                             } else {
-                                //mRecyclerView.setEmptyView(mEmptyView);
                                 mEmptyView.setVisibility(View.VISIBLE);
-                                //mEmptyView.setMessageText(mNetworkError);
                                 mProgressBar.setVisibility(View.GONE);
                             }
                         } else {
-                            Toast.makeText(getActivity(), error.toString() + "error desconocido", Toast.LENGTH_SHORT).show();                        }
-
+                            Toast.makeText(getActivity(), error.toString(), Toast.LENGTH_SHORT).show();
+                        }
                     }
                 });
     }

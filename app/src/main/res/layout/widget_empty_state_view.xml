@@ -8,17 +8,29 @@
 
     <ImageView
         android:id="@id/widget_empty_state_view_icon"
-        android:contentDescription="@string/widget.empty_state_view_icon_description"
+        android:contentDescription="@string/widget_empty_state_view_icon_description"
         style="@style/Wrap" />
+
 
     <TextView
         android:id="@id/widget_empty_state_view_text"
-        style="@style/Wrap"
-        android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
-        android:textColor="@color/secondary_text_disabled_material_dark"
-        android:layout_margin="@dimen/spacing_large"
-        android:fontFamily="sans-serif-light"
-        android:textAlignment="center"/>
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:focusable="false"
+        android:gravity="center_horizontal"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        android:textSize="26sp"
+        android:fontFamily="sans-serif-condensed-thin"/>
+
+    <TextView
+        android:id="@id/widget_empty_state_view_description"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:gravity="center_horizontal"
+        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+        android:fontFamily="sans-serif-thin"/>
 
 </LinearLayout>
 

@@ -18,7 +18,6 @@ package com.example.android.popularmovies.ui.activities;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.view.Menu;
 
 import com.example.android.popularmovies.R;
 import com.example.android.popularmovies.ui.fragments.MovieDetailFragment;
@@ -30,41 +29,22 @@ public class MovieDetailActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_movie_detail);
 
         if (savedInstanceState == null) {
 
-            // Create the movie detail fragment and add it to the activity
-            // using a fragment transaction.
-
             Bundle arguments = new Bundle();
             arguments.putParcelable(MovieDetailFragment.MOVIE,
                     getIntent().getParcelableExtra(MovieDetailFragment.MOVIE));
-            /*arguments.putInt("id",
-                    getIntent().getIntExtra("id",0));*/
 
             MovieDetailFragment fragment = new MovieDetailFragment();
             fragment.setArguments(arguments);
 
             getSupportFragmentManager()
                     .beginTransaction()
-                    .add(R.id.movie_detail_fragment_container, fragment)
+                    .replace(R.id.movie_detail_fragment_container, fragment, MovieDetailFragment.MOVIE)
                     .commit();
         }
 
-        /*getSupportFragmentManager().addOnBackStackChangedListener(new FragmentManager.OnBackStackChangedListener() {
-            @Override
-            public void onBackStackChanged() {
-                if (getFragmentManager().getBackStackEntryCount() == 0) finish();
-            }
-        });*/
     }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_movie_detail, menu);
-        return super.onCreateOptionsMenu(menu);
-    }
-
 }

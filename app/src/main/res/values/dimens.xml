@@ -17,34 +17,29 @@
 <resources>
 
     <!-- Default screen margins, per the Android Design guidelines. -->
-    <dimen name="activity_margin">16dp</dimen>
-    <!-- Default screen margins, per the Android Design guidelines. -->
-    <dimen name="activity_horizontal_margin">16dp</dimen>
-    <dimen name="activity_vertical_margin">16dp</dimen>
-
-    <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="spacing_xsmall">2dp</dimen>
+    <dimen name="spacing_small">4dp</dimen>
     <dimen name="spacing_medium">8dp</dimen>
     <dimen name="spacing_large">16dp</dimen>
     <dimen name="spacing_xlarge">32dp</dimen>
 
-    <dimen name="elevation_low">9dp</dimen>
-    <dimen name="elevation_high">12dp</dimen>
-    <dimen name="status_bar_height">25dp</dimen>
-    <dimen name="fab_compat_margin">0dp</dimen>
 
-
+    <!-- Movie list. -->
     <dimen name="movie_list_footer_height">64dp</dimen>
-    <dimen name="movie_poster_min_height">250dp</dimen>
-    <dimen name="movie_backdrop_min_height">250dp</dimen>
+    <dimen name="movie_list_poster_width">300dp</dimen>
+    <dimen name="movie_list_poster_height">450dp</dimen>
+
+    <!-- Movie detail. -->
     <dimen name="movie_detail_synopsis_margin_bottom">24dp</dimen>
+    <item name="movie_detail_poster_width" type="dimen">96dp</item>
 
-    <dimen name="movie_trailer_item_height">48dp</dimen>
+    <dimen name="appbar_elevation">4dp</dimen>
+    <dimen name="list_item_extra_padding">0dp</dimen>
+    <dimen name="list_icon">40dp</dimen>
 
-    <dimen name="fab_margin">16dp</dimen>
-
-
-
-
+    <dimen name="detail_card_elevation">6dp</dimen>
+    <item name="wrap_content" type="dimen">-2</item>
+    <item name="bar_height" type="dimen">56dp</item>
+    <dimen name="appbar_height">@dimen/wrap_content</dimen>
 
 </resources>

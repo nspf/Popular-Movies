@@ -1,3 +1,20 @@
+/*
+ * Copyright 2015 Nicolas Pintos
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+
 package com.example.android.popularmovies.ui.fragments;
 
 import android.database.Cursor;
@@ -12,7 +29,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
-import com.example.android.popularmovies.FavoriteMovieEvent;
+import com.example.android.popularmovies.data.event.FavoriteMovieEvent;
 import com.example.android.popularmovies.R;
 import com.example.android.popularmovies.data.model.Movie;
 import com.example.android.popularmovies.data.provider.movie.MovieColumns;
@@ -35,18 +52,16 @@ public class BaseMovieListFragment extends Fragment implements LoaderManager.Loa
     protected GridLayoutManager mGridLayoutManager;
     protected int mMovieListPage = 1;
 
-
     protected final String MOVIE_LIST = "movie list";
     protected final String PAGE = "page";
 
     protected static final int MOVIES_LOADER = 0;
 
-
     @Bind(R.id.movie_list_recyclerview) EmptyRecyclerView mRecyclerView;
     @Bind(R.id.movie_list_progressbar) ProgressBar mProgressBar;
     @Bind(R.id.movie_list_empty_view) EmptyStateView mEmptyView;
     @BindInt(R.integer.movie_list_columns) int mMovieListColumns;
-    @BindString(R.string.error_network) String mNetworkError;
+    @BindString(R.string.error_network_text) String mNetworkError;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -130,7 +145,7 @@ public class BaseMovieListFragment extends Fragment implements LoaderManager.Loa
 
     @SuppressWarnings("unused")
     public void onEvent(FavoriteMovieEvent event) {
-        mMovieListAdapter.setItemFavorite(mMovieListAdapter.getSelectedItem(), event.getValue().isFavorite());
+        mMovieListAdapter.setItemFavorite(mMovieListAdapter.getSelectedItem());
     }
 
 }

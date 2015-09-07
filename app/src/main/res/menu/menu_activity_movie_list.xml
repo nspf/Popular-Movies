@@ -19,7 +19,7 @@
     xmlns:tools="http://schemas.android.com/tools" tools:context=".MainActivity">
     <item
         android:id="@+id/action_sort"
-        android:title="@string/menu.sort_by"
+        android:title="@string/menu_sort_by"
         app:showAsAction="ifRoom"
         android:icon="@drawable/ic_sort_variant_white_24dp">
 
@@ -28,27 +28,21 @@
                 android:checkableBehavior="single">
                 <item
                     android:id="@+id/menu_most_popular"
-                    android:title="@string/menu.most_popular"
+                    android:title="@string/menu_most_popular"
                     android:checked="true"/>
                 <item
                     android:id="@+id/menu_most_rated"
-                    android:title="@string/menu.most_rated" />
+                    android:title="@string/menu_most_rated" />
 
                 <item
                     android:id="@+id/menu_highest_rated"
-                    android:title="@string/menu.highest_rated" />
+                    android:title="@string/menu_highest_rated" />
 
                 <item
                     android:id="@+id/menu_favorites"
-                    android:title="@string/menu.favorites" />
+                    android:title="@string/menu_favorites" />
             </group>
         </menu>
 
     </item>
-
-    <item
-        android:id="@+id/action_settings"
-        android:title="@string/menu.action_settings"
-        android:orderInCategory="100"
-        app:showAsAction="never" />
 </menu>

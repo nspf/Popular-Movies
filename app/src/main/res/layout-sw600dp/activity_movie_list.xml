@@ -1,45 +1,102 @@
-<?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
-xmlns:android="http://schemas.android.com/apk/res/android"
-xmlns:tools="http://schemas.android.com/tools"
-tools:context=".MainActivity"
-tools:ignore="MergeRootFrame"
-style="@style/Match">
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
-<android.support.v7.widget.Toolbar
-    android:id="@id/movie_list_toolbar"
-    android:layout_alignParentTop="true"
-    android:background="?attr/colorPrimary"
-    android:minHeight="?attr/actionBarSize"
-    style="@style/Fill.Width"/>
+    <RelativeLayout
+        android:id="@+id/appbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:background="?attr/colorPrimary"
+        android:orientation="vertical">
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:orientation="horizontal" android:layout_width="match_parent"
+        <android.support.v7.widget.Toolbar
+            android:id="@id/movie_list_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+        <!-- This Space is only there to line the image up with the
+             keyline correctly, since we cannot do addition of
+             dimensions/attributes otherwise -->
+        <android.support.v4.widget.Space
+            android:id="@+id/sunshineLogoAlign"
+            android:layout_width="@dimen/list_icon"
+            android:layout_height="?attr/listPreferredItemHeight"
+            android:layout_marginLeft="@dimen/abc_list_item_padding_horizontal_material"
+            android:layout_marginStart="@dimen/abc_list_item_padding_horizontal_material"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_below="@id/movie_list_toolbar"/>
+
+    </RelativeLayout>
+
+    <!-- This is used as a strut to create two columns in our RelativeLayout -->
+    <android.support.v4.widget.Space
+        android:id="@+id/layout_center"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_centerInParent="true" />
+
+    <FrameLayout
+        android:id="@+id/movie_list_fragment_container"
+        android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_below="@id/movie_list_toolbar">
+        android:layout_alignEnd="@id/layout_center"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignRight="@id/layout_center"
+        android:layout_marginLeft="@dimen/movie_detail_container_margin"
+        android:layout_marginRight="@dimen/movie_detail_container_margin"
+        android:layout_below="@id/appbar"/>
 
-        <FrameLayout
-            android:id="@id/movie_list_fragment_container"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"/>
+    <!-- This is used to give the card the appropriate margin
+         list_item_extra_padding +
+         abc_list_item_padding_horizontal_material -->
+    <android.support.v4.widget.Space
+        android:id="@+id/cardviewAligner"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignLeft="@id/layout_center"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="@dimen/bar_height"
+        android:layout_alignStart="@id/layout_center"
+        android:elevation="@dimen/appbar_elevation"
+        android:layout_marginRight="@dimen/list_item_extra_padding"
+        android:layout_marginEnd="@dimen/list_item_extra_padding"
+        />
+    <android.support.v7.widget.CardView
+        android:id="@id/movie_detail_fragment_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignLeft="@id/cardviewAligner"
+        android:layout_alignStart="@id/cardviewAligner"
+        android:layout_alignRight="@id/cardviewAligner"
+        android:layout_alignEnd="@id/cardviewAligner"
+        android:layout_alignTop="@id/cardviewAligner"
+        android:layout_alignBottom="@id/cardviewAligner"
+        android:layout_marginRight="@dimen/movie_detail_container_margin"
+        android:layout_marginEnd="@dimen/movie_detail_container_margin"
+        android:layout_marginBottom="0dp"
+        app:cardElevation="@dimen/detail_card_elevation"
+        app:cardPreventCornerOverlap="false"
+        style="@style/CardView.Dark"
+        android:layout_below="@id/appbar">
 
-        <FrameLayout
-            android:id="@id/movie_detail_fragment_container"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:layout_gravity="center">
 
-            <TextView
-                android:id="@id/movie_detail_fragment_container_empty"
-                android:text="No movie selected"
-                style="@style/Wrap"
-                android:layout_gravity="center"/>
+    <com.example.android.popularmovies.ui.widgets.EmptyStateView
+        android:id="@id/movie_list_empty_view"
+        app:messageText="@string/no_movie_selected_text"
+        app:messageDescription="@string/no_movie_selected_desc"
+        android:layout_gravity="center"
+        style="@style/Wrap" />
 
-
-        </FrameLayout>
-
-    </LinearLayout>
+    </android.support.v7.widget.CardView>
 
 </RelativeLayout>

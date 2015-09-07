@@ -1,9 +1,22 @@
+/*
+ * Copyright 2015 Nicolas Pintos
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package com.example.android.popularmovies.data.provider.movie;
 
-import java.util.Date;
-
 import android.database.Cursor;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.example.android.popularmovies.data.provider.base.AbstractCursor;
@@ -32,8 +45,7 @@ public class MovieCursor extends AbstractCursor implements MovieModel {
      */
     @Nullable
     public Integer getMovieId() {
-        Integer res = getIntegerOrNull(MovieColumns.MOVIE_ID);
-        return res;
+        return getIntegerOrNull(MovieColumns.MOVIE_ID);
     }
 
     /**
@@ -42,8 +54,7 @@ public class MovieCursor extends AbstractCursor implements MovieModel {
      */
     @Nullable
     public Boolean getAdult() {
-        Boolean res = getBooleanOrNull(MovieColumns.ADULT);
-        return res;
+        return getBooleanOrNull(MovieColumns.ADULT);
     }
 
     /**
@@ -52,8 +63,7 @@ public class MovieCursor extends AbstractCursor implements MovieModel {
      */
     @Nullable
     public String getBackdropPath() {
-        String res = getStringOrNull(MovieColumns.BACKDROP_PATH);
-        return res;
+        return getStringOrNull(MovieColumns.BACKDROP_PATH);
     }
 
     /**
@@ -62,8 +72,7 @@ public class MovieCursor extends AbstractCursor implements MovieModel {
      */
     @Nullable
     public String getOriginalLanguage() {
-        String res = getStringOrNull(MovieColumns.ORIGINAL_LANGUAGE);
-        return res;
+        return getStringOrNull(MovieColumns.ORIGINAL_LANGUAGE);
     }
 
     /**
@@ -72,8 +81,7 @@ public class MovieCursor extends AbstractCursor implements MovieModel {
      */
     @Nullable
     public String getOriginalTitle() {
-        String res = getStringOrNull(MovieColumns.ORIGINAL_TITLE);
-        return res;
+        return getStringOrNull(MovieColumns.ORIGINAL_TITLE);
     }
 
     /**
@@ -82,8 +90,7 @@ public class MovieCursor extends AbstractCursor implements MovieModel {
      */
     @Nullable
     public String getOverview() {
-        String res = getStringOrNull(MovieColumns.OVERVIEW);
-        return res;
+        return getStringOrNull(MovieColumns.OVERVIEW);
     }
 
     /**
@@ -92,8 +99,7 @@ public class MovieCursor extends AbstractCursor implements MovieModel {
      */
     @Nullable
     public String getReleaseDate() {
-        String res = getStringOrNull(MovieColumns.RELEASE_DATE);
-        return res;
+        return getStringOrNull(MovieColumns.RELEASE_DATE);
     }
 
     /**
@@ -102,8 +108,7 @@ public class MovieCursor extends AbstractCursor implements MovieModel {
      */
     @Nullable
     public String getPosterPath() {
-        String res = getStringOrNull(MovieColumns.POSTER_PATH);
-        return res;
+        return getStringOrNull(MovieColumns.POSTER_PATH);
     }
 
     /**
@@ -112,8 +117,7 @@ public class MovieCursor extends AbstractCursor implements MovieModel {
      */
     @Nullable
     public Double getPopularity() {
-        Double res = getDoubleOrNull(MovieColumns.POPULARITY);
-        return res;
+        return getDoubleOrNull(MovieColumns.POPULARITY);
     }
 
     /**
@@ -122,8 +126,7 @@ public class MovieCursor extends AbstractCursor implements MovieModel {
      */
     @Nullable
     public String getTitle() {
-        String res = getStringOrNull(MovieColumns.TITLE);
-        return res;
+        return getStringOrNull(MovieColumns.TITLE);
     }
 
     /**
@@ -132,8 +135,7 @@ public class MovieCursor extends AbstractCursor implements MovieModel {
      */
     @Nullable
     public Boolean getVideo() {
-        Boolean res = getBooleanOrNull(MovieColumns.VIDEO);
-        return res;
+        return getBooleanOrNull(MovieColumns.VIDEO);
     }
 
     /**
@@ -142,8 +144,7 @@ public class MovieCursor extends AbstractCursor implements MovieModel {
      */
     @Nullable
     public Double getVoteAverage() {
-        Double res = getDoubleOrNull(MovieColumns.VOTE_AVERAGE);
-        return res;
+        return getDoubleOrNull(MovieColumns.VOTE_AVERAGE);
     }
 
     /**
@@ -152,8 +153,7 @@ public class MovieCursor extends AbstractCursor implements MovieModel {
      */
     @Nullable
     public Integer getVoteCount() {
-        Integer res = getIntegerOrNull(MovieColumns.VOTE_COUNT);
-        return res;
+        return getIntegerOrNull(MovieColumns.VOTE_COUNT);
     }
 
     /**
@@ -162,7 +162,6 @@ public class MovieCursor extends AbstractCursor implements MovieModel {
      */
     @Nullable
     public Boolean getFavorite() {
-        Boolean res = getBooleanOrNull(MovieColumns.FAVORITE);
-        return res;
+        return getBooleanOrNull(MovieColumns.FAVORITE);
     }
 }
